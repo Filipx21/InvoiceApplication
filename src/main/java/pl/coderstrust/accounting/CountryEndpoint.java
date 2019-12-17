@@ -1,5 +1,7 @@
 package pl.coderstrust.accounting;
 
+import io.spring.guides.gs_producing_web_service.GetCountryRequest;
+import io.spring.guides.gs_producing_web_service.GetCountryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -24,25 +26,5 @@ public class CountryEndpoint {
         response.setCountry(countryRepository.findCountry(request.getName()));
 
         return response;
-    }
-
-    private class GetCountryResponse {
-        private Country country;
-
-        public void setCountry(Country country) {
-            this.country = country;
-        }
-    }
-
-    private class GetCountryRequest {
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }
