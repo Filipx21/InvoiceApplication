@@ -1,0 +1,60 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
+           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+
+    <xs:element name="getInvoicesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getInvoicesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="invoice" type="tns:invoice"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="invoice">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="date" type="xs:date"/>
+            <xs:element name="buyer" type="tns:company"/>
+            <xs:element name="seller" type="tns:company"/>
+            <xs:element name="entries" type="tns:entries"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="company">
+        <xs:sequence>
+        <xs:element name="id" type="xs:long"/>
+        <xs:element name="tin" type="xs:string"/>
+        <xs:element name="address" type="xs:string"/>
+        <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="entries">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="price" type="xs:decimal"/>
+            <xs:element name="vatValue" type="xs:int"/>
+            <xs:element name="vatRate" type="tns:vat"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="vat">
+        <xs:sequence>
+            <xs:element name="STANDARD_23" type="xs:int"/>
+            <xs:element name="REDUCED_8" type="xs:int"/>
+            <xs:element name="REDUCED_7" type="xs:int"/>
+            <xs:element name="REDUCED_5" type="xs:int"/>
+            <xs:element name="REDUCED_4" type="xs:int"/>
+            <xs:element name="REDUCED_0" type="xs:int"/>
+            <xs:element name="TAX_FREE" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
