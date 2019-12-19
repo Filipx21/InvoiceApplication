@@ -1,7 +1,5 @@
 package pl.coderstrust.accounting;
 
-import io.spring.guides.gs_producing_web_service.Country;
-import io.spring.guides.gs_producing_web_service.Currency;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import pl.coderstrust.accounting.model.Invoice;
@@ -19,9 +17,6 @@ public class CountryRepository {
     public void initData() {
         Country spain = new Country();
         spain.setName("Spain");
-        spain.setCapital("Madrid");
-        spain.setCurrency(Currency.EUR);
-        spain.setPopulation(46704314);
 
         Invoice invoice = new Invoice();
         invoices.put(invoice.getId(), invoice);
