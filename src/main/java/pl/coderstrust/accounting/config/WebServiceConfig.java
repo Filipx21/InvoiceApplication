@@ -1,4 +1,4 @@
-package pl.coderstrust.accounting;
+package pl.coderstrust.accounting.config;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -23,18 +23,18 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "countries")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
+    @Bean(name = "invoices")
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema invoicesSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("CountriesPort");
+        wsdl11Definition.setPortTypeName("InvoicesPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://spring.io/guides/gs-producing-web-service");
-        wsdl11Definition.setSchema(countriesSchema);
+        wsdl11Definition.setSchema(invoicesSchema);
         return wsdl11Definition;
     }
 
     @Bean
     public XsdSchema countriesSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("soap/countries.xsd"));
+        return new SimpleXsdSchema(new ClassPathResource("soap/invoices.xsd"));
     }
 }
