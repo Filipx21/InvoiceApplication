@@ -19,9 +19,7 @@
 
     <xs:element name="findAllInvoices">
     <xs:complexType>
-        <xs:sequence>
-            <xs:element name="id" type="xs:long"/>
-        </xs:sequence>
+        <xs:sequence/>
     </xs:complexType>
 </xs:element>
 
@@ -36,7 +34,7 @@
     <xs:element name="findAllInvoiceByDateRange">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="id" type="xs:long"/>
+                <xs:element name="date" type="xs:date"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

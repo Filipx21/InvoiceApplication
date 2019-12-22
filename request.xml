@@ -2,8 +2,8 @@
                   xmlns:gs="http://spring.io/guides/gs-producing-web-service">
    <soapenv:Header/>
    <soapenv:Body>
-      <gs:getInvoicesRequest>
+      <gs:findAllInvoices>
          <gs:id>1</gs:id>
-      </gs:getInvoicesRequest>
+      </gs:findAllInvoices>
    </soapenv:Body>
 </soapenv:Envelope>
