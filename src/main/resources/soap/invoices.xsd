@@ -1,7 +1,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
-    <xs:element name="getInvoicesRequest">
+    <xs:element name="findInvoiceById">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="id" type="xs:long"/>
@@ -9,7 +9,55 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getInvoicesResponse">
+    <xs:element name="responseFindInvoiceById">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="invoice" type="tns:invoice"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="findAllInvoices">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+    <xs:element name="responseFindAllInvoices">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="invoice" type="tns:invoice"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="findAllInvoiceByDateRange">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="responseFindAllInvoiceByDateRange">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="invoice" type="tns:invoice"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteInvoiceById">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="responseDeleteInvoiceById">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoice" type="tns:invoice"/>

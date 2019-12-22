@@ -24,41 +24,41 @@ public class InvoicesEndpoint {
         this.invoiceBook = invoiceBook;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getInvoicesResponse")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
     @ResponsePayload
     public GetInvoicesResponse findInvoiceById(@RequestPayload Long id) {
-        GetInvoicesResponse response = new GetInvoicesResponse();
-        //response.setInvoice(invoiceBookMapper.findInvoiceById(id));
+        GetInvoicesResponse responseFindInvoiceById = new GetInvoicesResponse();
+        //responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
 
-        return response;
+        return responseFindInvoiceById;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getInvoicesResponse")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
     @ResponsePayload
     public GetInvoicesResponse findAllInvoices() {
-        GetInvoicesResponse response = new GetInvoicesResponse();
-        response.setInvoice((Invoice) invoiceBookMapper.findAllInvoices());
+        GetInvoicesResponse responseFindAllInvoices = new GetInvoicesResponse();
+        responseFindAllInvoices.setInvoice((Invoice) invoiceBookMapper.findAllInvoices());
 
-        return response;
+        return responseFindAllInvoices;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getInvoicesResponse")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRange")
     @ResponsePayload
     public GetInvoicesResponse findAllInvoiceByDateRange(@RequestPayload LocalDate localDatefrom,
                                                          LocalDate localDateTo) {
-        GetInvoicesResponse response = new GetInvoicesResponse();
-        response.setInvoice((Invoice) invoiceBookMapper.findAllInvoiceByDateRange(localDatefrom,
-            localDateTo));
+        GetInvoicesResponse responseFindAllInvoiceByDateRange = new GetInvoicesResponse();
+        responseFindAllInvoiceByDateRange.setInvoice((Invoice) invoiceBookMapper.
+            findAllInvoiceByDateRange(localDatefrom, localDateTo));
 
-        return response;
+        return responseFindAllInvoiceByDateRange;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getInvoicesResponse")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceById")
     @ResponsePayload
     public GetInvoicesResponse deleteInvoiceById(@RequestPayload Long id) {
-        GetInvoicesResponse response = new GetInvoicesResponse();
-        //response.setInvoice(invoiceBookMapper.deleteInvoiceById(id));
+        GetInvoicesResponse responseDeleteInvoiceById = new GetInvoicesResponse();
+        //responseDeleteInvoiceById.setInvoice(invoiceBookMapper.deleteInvoiceById(id));
 
-        return response;
+        return responseDeleteInvoiceById;
     }
 }
