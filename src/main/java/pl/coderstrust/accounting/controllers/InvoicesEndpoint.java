@@ -22,10 +22,9 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getInvoicesResponse")
     @ResponsePayload
-    public GetInvoicesResponse getInvoices(@RequestPayload GetInvoicesRequest request) {
+    public GetInvoicesResponse getInvoices(@RequestPayload GetInvoicesRequest request, Long id) {
         GetInvoicesResponse response = new GetInvoicesResponse();
-        Long id = 1L;
-        response.setInvoice(invoiceBook.findInvoiceById(id));
+        //response.setInvoice(invoiceBook.findInvoiceById(id));
 
         return response;
     }
