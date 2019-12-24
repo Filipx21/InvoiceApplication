@@ -1,22 +1,15 @@
 package pl.coderstrust.accounting.mapper;
 
-import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
-import pl.coderstrust.accounting.services.InvoiceBook;
+import io.spring.guides.gs_producing_web_service.Invoice;
 
-public class InvoiceBookMapper extends InvoiceBook{
+public class InvoiceBookMapper {
 
-    public InvoiceBook invoiceBook;
+    public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice (pl.coderstrust.accounting.model.Invoice invoice) {
 
-    public InvoiceBookMapper(InvoiceDatabase invoiceDatabase) {
-        super(invoiceDatabase);
+        Invoice invoice1 = new Invoice();
+        
+        // new Invoice web service nowy obiekt
+        // invoice set wszystkie pola
+        return toSoapInvoice(invoice);
     }
-
-    public InvoiceBook getInvoiceBook() {
-        return invoiceBook;
-    }
-
-    public void setInvoiceBook(InvoiceBook invoiceBook) {
-        this.invoiceBook = invoiceBook;
-    }
-
 }

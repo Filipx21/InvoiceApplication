@@ -11,6 +11,8 @@ import pl.coderstrust.accounting.mapper.InvoiceBookMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Endpoint
 public class InvoicesEndpoint {
@@ -37,7 +39,10 @@ public class InvoicesEndpoint {
     @ResponsePayload
     public GetInvoicesResponse findAllInvoices() {
         GetInvoicesResponse responseFindAllInvoices = new GetInvoicesResponse();
-        responseFindAllInvoices.setInvoice((Invoice) invoiceBookMapper.findAllInvoices());
+        List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
+        List<Invoice> soapInvoices = allInvoices.stream().map(InvoiceBookMapper::toSoapInvoice).collect(Collectors.toList());
+        // responseFindAllInvoices.setInvoices(soapInvoices)
+        responseFindAllInvoices.setInvoice(invoiceBookMapper.findAllInvoices());
 
         return responseFindAllInvoices;
     }
@@ -45,7 +50,7 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRange")
     @ResponsePayload
     public GetInvoicesResponse findAllInvoiceByDateRange(@RequestPayload LocalDate localDatefrom,
-                                                         LocalDate localDateTo) {
+                                                         @RequestPayload LocalDate localDateTo) {
         GetInvoicesResponse responseFindAllInvoiceByDateRange = new GetInvoicesResponse();
         responseFindAllInvoiceByDateRange.setInvoice((Invoice) invoiceBookMapper.
             findAllInvoiceByDateRange(localDatefrom, localDateTo));
