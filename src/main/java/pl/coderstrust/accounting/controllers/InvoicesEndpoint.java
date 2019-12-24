@@ -1,6 +1,10 @@
 package pl.coderstrust.accounting.controllers;
 
-import io.spring.guides.gs_producing_web_service.GetInvoicesResponse;
+import io.spring.guides.gs_producing_web_service.GetDeleteInvoiceByIdResponse;
+import io.spring.guides.gs_producing_web_service.GetFindAllInvoiceByDateRangeResponse;
+import io.spring.guides.gs_producing_web_service.GetFindAllInvoicesResponse;
+import io.spring.guides.gs_producing_web_service.GetFindInvoiceByIdRequest;
+import io.spring.guides.gs_producing_web_service.GetFindInvoiceByIdResponse;
 import io.spring.guides.gs_producing_web_service.Invoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -28,8 +32,8 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
     @ResponsePayload
-    public GetInvoicesResponse findInvoiceById(@RequestPayload Long id) {
-        GetInvoicesResponse responseFindInvoiceById = new GetInvoicesResponse();
+    public GetFindInvoiceByIdResponse findInvoiceById(@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest) {
+        GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
         //responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
 
         return responseFindInvoiceById;
@@ -37,31 +41,31 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
     @ResponsePayload
-    public GetInvoicesResponse findAllInvoices() {
-        GetInvoicesResponse responseFindAllInvoices = new GetInvoicesResponse();
+    public GetFindAllInvoicesResponse findAllInvoices() {
+        GetFindAllInvoicesResponse responseFindAllInvoices = new GetFindAllInvoicesResponse();
         List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
         List<Invoice> soapInvoices = allInvoices.stream().map(InvoiceBookMapper::toSoapInvoice).collect(Collectors.toList());
         // responseFindAllInvoices.setInvoices(soapInvoices)
-        responseFindAllInvoices.setInvoice(invoiceBookMapper.findAllInvoices());
+        //responseFindAllInvoices.setInvoice(invoiceBookMapper.findAllInvoices());
 
         return responseFindAllInvoices;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRange")
     @ResponsePayload
-    public GetInvoicesResponse findAllInvoiceByDateRange(@RequestPayload LocalDate localDatefrom,
+    public GetFindAllInvoiceByDateRangeResponse findAllInvoiceByDateRange(@RequestPayload LocalDate localDatefrom,
                                                          @RequestPayload LocalDate localDateTo) {
-        GetInvoicesResponse responseFindAllInvoiceByDateRange = new GetInvoicesResponse();
-        responseFindAllInvoiceByDateRange.setInvoice((Invoice) invoiceBookMapper.
-            findAllInvoiceByDateRange(localDatefrom, localDateTo));
+        GetFindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange = new GetFindAllInvoiceByDateRangeResponse();
+        //responseFindAllInvoiceByDateRange.setInvoice((Invoice) invoiceBookMapper.
+            findAllInvoiceByDateRange(localDatefrom, localDateTo);
 
         return responseFindAllInvoiceByDateRange;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceById")
     @ResponsePayload
-    public GetInvoicesResponse deleteInvoiceById(@RequestPayload Long id) {
-        GetInvoicesResponse responseDeleteInvoiceById = new GetInvoicesResponse();
+    public GetDeleteInvoiceByIdResponse deleteInvoiceById(@RequestPayload Long id) {
+        GetDeleteInvoiceByIdResponse responseDeleteInvoiceById = new GetDeleteInvoiceByIdResponse();
         //responseDeleteInvoiceById.setInvoice(invoiceBookMapper.deleteInvoiceById(id));
 
         return responseDeleteInvoiceById;
