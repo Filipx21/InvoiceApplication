@@ -26,7 +26,7 @@
     <xs:element name="GetFindAllInvoicesResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="invoice" type="tns:invoice"/>
+                <xs:element name="invoices" type="tns:invoices"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -43,7 +43,7 @@
     <xs:element name="GetFindAllInvoiceByDateRangeResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="invoice" type="tns:invoice"/>
+                <xs:element name="invoices" type="tns:invoice"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -60,6 +60,14 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoice" type="tns:invoice"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="invoices">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="invoiceList" Type="xs:invoice" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
