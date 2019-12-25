@@ -1,15 +1,34 @@
 package pl.coderstrust.accounting.mapper;
 
-import io.spring.guides.gs_producing_web_service.Invoice;
+import io.spring.guides.gs_producing_web_service.Company;
+import io.spring.guides.gs_producing_web_service.Entries;
+import org.mapstruct.Mapper;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+
+@Mapper
 public class InvoiceBookMapper {
 
-    public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice (pl.coderstrust.accounting.model.Invoice invoice) {
+    private Long id;
+    private XMLGregorianCalendar date;
+    private Company buyer;
+    private io.spring.guides.gs_producing_web_service.Company seller;
+    private Entries entries;
 
-        Invoice invoice1 = new Invoice();
+    public io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice
+        (pl.coderstrust.accounting.model.Invoice invoice) {
 
-        // new Invoice web service nowy obiekt
-        // invoice set wszystkie pola
-        return toSoapInvoice(invoice);
+        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
+            new io.spring.guides.gs_producing_web_service.Invoice();
+
+        invoiceSoap.setId(invoice.getId());
+        invoiceSoap.setId(id);
+        invoiceSoap.setDate(date);
+        invoiceSoap.setSeller(seller);
+        invoiceSoap.setBuyer(buyer);
+        invoiceSoap.setEntries(entries);
+        
+        return invoiceSoap;
     }
 }
