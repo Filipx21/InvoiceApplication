@@ -64,13 +64,11 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="invoices">
-        <xs:complexType>
+    <xs:complexType name="invoices">
             <xs:sequence>
-                <xs:element name="invoiceList" Type="xs:invoice" maxOccurs="unbounded"/>
+                <xs:element name="invoiceList" type="tns:invoice" maxOccurs="unbounded"/>
             </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+    </xs:complexType>
 
     <xs:complexType name="invoice">
         <xs:sequence>
