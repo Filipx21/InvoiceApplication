@@ -1,22 +1,30 @@
 package pl.coderstrust.accounting.mapper;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.databind.util.Converter;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import pl.coderstrust.accounting.model.Invoice;
+import pl.coderstrust.accounting.model.soap.InvoiceSoap;
 
-public class ConverterSoap implements Converter {
-    @Override
-    public Object convert(Object o) {
-        return null;
-    }
+@Mapper
+public interface ConverterSoap  {
 
-    @Override
-    public JavaType getInputType(TypeFactory typeFactory) {
-        return null;
-    }
+    @Mappings({
+        @Mapping(target = "id", source = "invoiceSoap.id"),
+        @Mapping(target = "date", source = "invoiceSoap.date",
+            dateFormat = "yyyy-MM-dd"),
+        @Mapping(target = "buyer", source = "invoiceSoap.buyer"),
+        @Mapping(target = "seller", source = "invoiceSoap.seller"),
+        @Mapping(target = "entries", source = "invoiceSoap.entries")})
+    Invoice toInvoice(InvoiceSoap invoiceHib);
 
-    @Override
-    public JavaType getOutputType(TypeFactory typeFactory) {
-        return null;
-    }
+    @Mappings({
+        @Mapping(target = "id", source = "invoice.id"),
+        @Mapping(target = "date", source = "invoice.date",
+            dateFormat = "yyyy-MM-dd"),
+        @Mapping(target = "buyer", source = "invoice.buyer"),
+        @Mapping(target = "seller", source = "invoice.seller"),
+        @Mapping(target = "entries", source = "invoice.entries")})
+    InvoiceSoap toInvoiceSoap(Invoice invoice);
+
 }

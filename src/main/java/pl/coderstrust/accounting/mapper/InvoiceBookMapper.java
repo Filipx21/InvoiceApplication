@@ -1,21 +1,15 @@
 package pl.coderstrust.accounting.mapper;
 
+import org.mapstruct.Mapper;
 import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.util.List;
 
-
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Mapper
 public class InvoiceBookMapper {
 
-    @XmlAttribute
     private static Long id;
     private static LocalDate date;
     private static Company buyer;
@@ -34,11 +28,11 @@ public class InvoiceBookMapper {
         seller = invoice.getSeller();
         entries = invoice.getEntries();
 
-        invoiceSoap.setId(id);
-        invoiceSoap.setDate(date);
-        invoiceSoap.setSeller(seller);
-        invoiceSoap.setBuyer(buyer);
-        invoiceSoap.setEntries(entries);
+//        invoiceSoap.setId(id);
+//        invoiceSoap.setDate(date);
+//        invoiceSoap.setSeller(seller);
+//        invoiceSoap.setBuyer(buyer);
+//        invoiceSoap.setEntries(entries);
 
         return invoiceSoap;
     }
