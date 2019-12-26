@@ -6,6 +6,7 @@ import io.spring.guides.gs_producing_web_service.GetFindAllInvoicesResponse;
 import io.spring.guides.gs_producing_web_service.GetFindInvoiceByIdRequest;
 import io.spring.guides.gs_producing_web_service.GetFindInvoiceByIdResponse;
 import io.spring.guides.gs_producing_web_service.Invoice;
+import io.spring.guides.gs_producing_web_service.Invoices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -45,7 +46,8 @@ public class InvoicesEndpoint {
         GetFindAllInvoicesResponse responseFindAllInvoices = new GetFindAllInvoicesResponse();
         List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
         List<Invoice> soapInvoices = allInvoices.stream().map(InvoiceBookMapper::toSoapInvoice).collect(Collectors.toList());
-        responseFindAllInvoices.setInvoice(soapInvoices);
+        responseFindAllInvoices.setInvoices((Invoices) soapInvoices);
+
         // responseFindAllInvoices.setInvoice(invoiceBookMapper.findAllInvoices());
 
         return responseFindAllInvoices;

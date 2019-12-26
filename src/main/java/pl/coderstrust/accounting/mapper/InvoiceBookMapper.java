@@ -28,8 +28,8 @@ public class InvoiceBookMapper {
         seller = invoice.getSeller();
         entries = invoice.getEntries();
 
-//        invoiceSoap.setId(id);
-//        invoiceSoap.setDate(date);
+        invoiceSoap.setId(id);
+        invoiceSoap.setDate(date);
 //        invoiceSoap.setSeller(seller);
 //        invoiceSoap.setBuyer(buyer);
 //        invoiceSoap.setEntries(entries);
