@@ -70,6 +70,12 @@
             </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="entries">
+        <xs:sequence>
+            <xs:element name="entriesList" type="tns:entry" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="invoice">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
@@ -89,7 +95,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="entries">
+    <xs:complexType name="entry">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
             <xs:element name="description" type="xs:string"/>
