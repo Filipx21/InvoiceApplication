@@ -47,12 +47,8 @@ public class InvoicesEndpoint {
         List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
         List<Invoice> soapInvoices = allInvoices.stream().map(InvoiceBookMapper::toSoapInvoice).collect(Collectors.toList());
         Invoices invoices = new Invoices();
-        // invoices.setInvoiceList;
         invoices.getInvoiceList().addAll(soapInvoices);
         responseFindAllInvoices.setInvoices(invoices);
-
-        // responseFindAllInvoices.setInvoice(invoiceBookMapper.findAllInvoices());
-
         return responseFindAllInvoices;
     }
 
