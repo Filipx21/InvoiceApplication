@@ -2,12 +2,12 @@
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
     <xs:element name="GetFindInvoiceByIdRequest">
-    <xs:complexType>
-        <xs:sequence>
-            <xs:element name="id" type="xs:long"/>
-        </xs:sequence>
-    </xs:complexType>
-</xs:element>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="GetFindInvoiceByIdResponse">
         <xs:complexType>
@@ -18,10 +18,10 @@
     </xs:element>
 
     <xs:element name="GetfindAllInvoicesRequest">
-    <xs:complexType>
-        <xs:sequence/>
-    </xs:complexType>
-</xs:element>
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="GetFindAllInvoicesResponse">
         <xs:complexType>
@@ -65,9 +65,9 @@
     </xs:element>
 
     <xs:complexType name="invoices">
-            <xs:sequence>
-                <xs:element name="invoiceList" type="tns:invoice" maxOccurs="unbounded"/>
-            </xs:sequence>
+        <xs:sequence>
+            <xs:element name="invoiceList" type="tns:invoice" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="entries">
@@ -88,10 +88,10 @@
 
     <xs:complexType name="company">
         <xs:sequence>
-        <xs:element name="id" type="xs:long"/>
-        <xs:element name="tin" type="xs:string"/>
-        <xs:element name="address" type="xs:string"/>
-        <xs:element name="name" type="xs:string"/>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="tin" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -105,15 +105,15 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="vat">
-        <xs:sequence>
-            <xs:element name="STANDARD_23" type="xs:int"/>
-            <xs:element name="REDUCED_8" type="xs:int"/>
-            <xs:element name="REDUCED_7" type="xs:int"/>
-            <xs:element name="REDUCED_5" type="xs:int"/>
-            <xs:element name="REDUCED_4" type="xs:int"/>
-            <xs:element name="REDUCED_0" type="xs:int"/>
-            <xs:element name="TAX_FREE" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:simpleType name="vat">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="STANDARD_23"/>
+            <xs:enumeration value="REDUCED_8"/>
+            <xs:enumeration value="REDUCED_7"/>
+            <xs:enumeration value="REDUCED_5"/>
+            <xs:enumeration value="REDUCED_4"/>
+            <xs:enumeration value="REDUCED_0"/>
+            <xs:enumeration value="TAX_FREE"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>
