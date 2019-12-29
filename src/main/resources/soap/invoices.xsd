@@ -116,7 +116,7 @@
             </xs:restriction>
         </xs:complexContent>
     </xs:complexType>
-    
+
             <xs:complexType name="vat">
                 <xs:sequence>
                     <xs:element name="STANDARD_23"
