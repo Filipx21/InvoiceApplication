@@ -21,9 +21,6 @@ public class InvoiceBookMapper {
     public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice
         (pl.coderstrust.accounting.model.Invoice invoice) {
 
-
-
-        //dto
         io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
             new io.spring.guides.gs_producing_web_service.Invoice();
 
@@ -33,8 +30,7 @@ public class InvoiceBookMapper {
         Company seller = invoice.getSeller();
         List<InvoiceEntry> entries = invoice.getEntries();
 
-        XMLGregorianCalendar xmlDate =
-            null;
+        XMLGregorianCalendar xmlDate = null;
         try {
             xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString());
         } catch (DatatypeConfigurationException e) {
@@ -45,7 +41,7 @@ public class InvoiceBookMapper {
         invoiceSoap.setDate(xmlDate);
         invoiceSoap.setSeller(toXmlCompany(seller));
         invoiceSoap.setBuyer(toXmlCompany(buyer));
-        invoiceSoap.setEntries(toEntries(entries));
+        invoiceSoap.setEntries(toEntriesList(entries));
 
         return invoiceSoap;
     }
@@ -59,7 +55,7 @@ public class InvoiceBookMapper {
         return soapCompany;
     }
 
-    private static Entries toEntries (List<InvoiceEntry> invoiceEntries){
+    private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries){
         Entries entries = new Entries();
         List<Entry> entryList = invoiceEntries.stream().map(invoiceEntry -> toEntry(invoiceEntry)).collect(Collectors.toList());
         entries.getEntriesList().addAll(entryList);

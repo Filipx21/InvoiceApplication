@@ -35,7 +35,7 @@ public class InvoicesEndpoint {
     @ResponsePayload
     public GetFindInvoiceByIdResponse findInvoiceById(@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest) {
         GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
-        //responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
+        responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
 
         return responseFindInvoiceById;
     }
