@@ -56,15 +56,6 @@ public class InvoiceBookMapper {
         return invoiceSoap;
     }
 
-//    public io.spring.guides.gs_producing_web_service.Invoice saveInvoice(Invoice invoiceSoap) {
-//        if (invoiceSoap != null) {
-//            log.info("Save invoice in InvoiceBook services");
-//            return invoiceDatabase.saveInvoice(invoiceSoap);
-//        }
-//        log.info("Null save invoice in InvoiceBook services");
-//        return null;
-//    }
-
     private static io.spring.guides.gs_producing_web_service.Company toXmlCompany (Company company){
         io.spring.guides.gs_producing_web_service.Company soapCompany =
             new io.spring.guides.gs_producing_web_service.Company();
