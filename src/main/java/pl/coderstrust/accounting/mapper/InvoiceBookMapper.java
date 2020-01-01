@@ -118,7 +118,8 @@ public class InvoiceBookMapper {
 
     private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries){
         List<InvoiceEntry> entries = new ArrayList<>();
-        invoiceEntries.getEntriesList().add(invoiceEntries);
+        Entries entries1 = (Entries) invoiceEntries.getEntriesList();
+        entries.stream().map(invoiceEntry -> toEntry(invoiceEntry)).collect(Collectors.toList());
         return entries;
     }
 
