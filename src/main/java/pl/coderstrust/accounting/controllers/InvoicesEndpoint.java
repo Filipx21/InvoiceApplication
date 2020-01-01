@@ -58,13 +58,21 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
     @ResponsePayload
-    public GetFindInvoiceByIdResponse findInvoiceById
+    public Object findInvoiceById
         (@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest) {
         log.info("Find Invoice by ID SOAP endpoint services");
         GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
        // responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
+        //return responseFindInvoiceById;
+        invoiceBookMapper.
 
-        return responseFindInvoiceById;
+        pl.coderstrust.accounting.model.Invoice invoiceFound = invoiceDatabase.findInvoiceById();
+        if (invoiceFound != null) {
+            log.info("Find Invoice by ID SOAP endpoint services");
+            return responseFindInvoiceById;
+        }
+        log.info("Find Invoice by ID is null in InvoiceBook services");
+        return null;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")

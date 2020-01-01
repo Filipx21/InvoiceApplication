@@ -8,12 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
 import pl.coderstrust.accounting.model.Company;
+import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,6 @@ public class InvoiceBookMapper {
 
     public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice
         (pl.coderstrust.accounting.model.Invoice invoice) {
-
 
         io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
             new io.spring.guides.gs_producing_web_service.Invoice();
@@ -53,12 +54,41 @@ public class InvoiceBookMapper {
         invoiceSoap.setBuyer(toXmlCompany(buyer));
         invoiceSoap.setEntries(toEntriesList(entries));
 
+        log.info("Invoice SOAP serialized");
         return invoiceSoap;
     }
 
+    public static Invoice toInvoice (io.spring.guides.gs_producing_web_service.Invoice invoiceSoap)
+        throws DatatypeConfigurationException {
+
+        Invoice invoiceModel = new Invoice();
+
+        Long id = invoiceSoap.getId();
+        XMLGregorianCalendar date = invoiceSoap.getDate();
+        io.spring.guides.gs_producing_web_service.Company buyer = invoiceSoap.getBuyer();
+        io.spring.guides.gs_producing_web_service.Company seller = invoiceSoap.getSeller();
+        Entries entries = invoiceSoap.getEntries();
+
+        XMLGregorianCalendar dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+            LocalDate localDate = LocalDate.of(
+                dateModel.getYear(),
+                dateModel.getMonth(),
+                dateModel.getDay());
+
+        invoiceModel.setId(id);
+        invoiceModel.setDate(localDate);
+        invoiceModel.setSeller(toCompanyModel(seller));
+        invoiceModel.setBuyer(toCompanyModel(buyer));
+        invoiceModel.setEntries(toEntriesListModel(entries));
+
+        return invoiceModel;
+    }
+
     private static io.spring.guides.gs_producing_web_service.Company toXmlCompany (Company company){
+
         io.spring.guides.gs_producing_web_service.Company soapCompany =
             new io.spring.guides.gs_producing_web_service.Company();
+
         soapCompany.setId(company.getId());
         soapCompany.setTin(company.getTin());
         soapCompany.setAddress(company.getAddress());
@@ -66,11 +96,28 @@ public class InvoiceBookMapper {
         return soapCompany;
     }
 
+    private static Company toCompanyModel (io.spring.guides.gs_producing_web_service.Company company){
+
+        Company companyModel = new Company();
+
+        companyModel.setId(company.getId());
+        companyModel.setTin(company.getTin());
+        companyModel.setAddress(company.getAddress());
+        companyModel.setName(company.getName());
+        return companyModel;
+    }
+
     private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries){
         Entries entries = new Entries();
         List<Entry> entryList = invoiceEntries.stream().map(invoiceEntry ->
             toEntry(invoiceEntry)).collect(Collectors.toList());
         entries.getEntriesList().addAll(entryList);
+        return entries;
+    }
+
+    private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries){
+        List<InvoiceEntry> entries = new ArrayList<>();
+        invoiceEntries.getEntriesList().add(invoiceEntries);
         return entries;
     }
 
