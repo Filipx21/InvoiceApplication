@@ -20,6 +20,7 @@ import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
 import pl.coderstrust.accounting.mapper.InvoiceBookMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +44,12 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoice")
     @ResponsePayload
-    public GetSaveInvoiceResponse saveInvoice(@RequestPayload GetSaveInvoiceRequest getSaveInvoiceRequest) {
+    public GetSaveInvoiceResponse saveInvoice(
+        @RequestPayload GetSaveInvoiceRequest getSaveInvoiceRequest) {
         log.info("Save invoice SOAP endpoint services");
         GetSaveInvoiceResponse responseSaveInvoice = new GetSaveInvoiceResponse();
-        pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
+        pl.coderstrust.accounting.model.Invoice invoice =
+            new pl.coderstrust.accounting.model.Invoice();
         if (invoice != null) {
             log.info("Save invoice in InvoiceBook services");
             invoiceDatabase.saveInvoice(invoice);
@@ -59,20 +62,11 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
     @ResponsePayload
     public Object findInvoiceById
-        (@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest) {
-        log.info("Find Invoice by ID SOAP endpoint services");
+        (@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest)
+        throws DatatypeConfigurationException {
         GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
-       // responseFindInvoiceById.setInvoice(invoiceBookMapper.findInvoiceById(id));
-        //return responseFindInvoiceById;
-        invoiceBookMapper.
-
-        pl.coderstrust.accounting.model.Invoice invoiceFound = invoiceDatabase.findInvoiceById();
-        if (invoiceFound != null) {
-            log.info("Find Invoice by ID SOAP endpoint services");
-            return responseFindInvoiceById;
-        }
-        log.info("Find Invoice by ID is null in InvoiceBook services");
-        return null;
+        log.info("Find Invoice by ID SOAP endpoint services");
+        return InvoiceBookMapper.toInvoice(responseFindInvoiceById);
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
@@ -95,8 +89,7 @@ public class InvoicesEndpoint {
         log.info("Find all invoices by data range SOAP endpoint services");
         GetFindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange =
             new GetFindAllInvoiceByDateRangeResponse();
-        //responseFindAllInvoiceByDateRange.setInvoice((Invoice) invoiceBookMapper.
-            findAllInvoiceByDateRange(localDatefrom, localDateTo);
+        findAllInvoiceByDateRange(localDatefrom, localDateTo);
 
         return responseFindAllInvoiceByDateRange;
     }

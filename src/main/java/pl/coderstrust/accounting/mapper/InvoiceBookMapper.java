@@ -2,6 +2,7 @@ package pl.coderstrust.accounting.mapper;
 
 import io.spring.guides.gs_producing_web_service.Entries;
 import io.spring.guides.gs_producing_web_service.Entry;
+import io.spring.guides.gs_producing_web_service.GetFindInvoiceByIdResponse;
 import io.spring.guides.gs_producing_web_service.Vat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class InvoiceBookMapper {
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice (io.spring.guides.gs_producing_web_service.Invoice invoiceSoap)
+    public static Invoice toInvoice (GetFindInvoiceByIdResponse invoiceSoap)
         throws DatatypeConfigurationException {
 
         Invoice invoiceModel = new Invoice();
