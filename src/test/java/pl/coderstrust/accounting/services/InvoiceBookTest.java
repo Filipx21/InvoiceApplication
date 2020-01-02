@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
-import pl.coderstrust.accounting.repositories.InMemoryDatabase;
+import pl.coderstrust.accounting.repositories.memory.InMemoryDatabase;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
