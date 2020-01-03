@@ -125,35 +125,15 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="EnumerationContextType">
-        <xs:complexContent mixed="true">
-            <xs:restriction base="xs:anyType">
-                <xs:sequence>
-                    <xs:any namespace="##other" processContents="lax"
-                            minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-                <xs:anyAttribute namespace="##other" processContents="lax" />
-            </xs:restriction>
-        </xs:complexContent>
-    </xs:complexType>
-
-            <xs:complexType name="vat">
-                <xs:sequence>
-                    <xs:element name="STANDARD_23"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="REDUCED_8"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="REDUCED_7"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="REDUCED_5"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="REDUCED_4"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="REDUCED_0"
-                                type="tns:EnumerationContextType" />
-                    <xs:element name="TAX_FREE"
-                                type="tns:EnumerationContextType" />
-                </xs:sequence>
-                <xs:anyAttribute namespace="##other" processContents="lax" />
-            </xs:complexType>
+            <xs:simpleType name="vat">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STANDARD_23"/>
+                    <xs:enumeration value="REDUCED_8"/>
+                    <xs:enumeration value="REDUCED_7"/>
+                    <xs:enumeration value="REDUCED_5"/>
+                    <xs:enumeration value="REDUCED_4"/>
+                    <xs:enumeration value="REDUCED_0"/>
+                    <xs:enumeration value="TAX_FREE"/>
+                </xs:restriction>
+            </xs:simpleType>
 </xs:schema>
