@@ -12,6 +12,7 @@ import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceBookMapper {
 
+    private static io.spring.guides.gs_producing_web_service.Vat Vat;
     private final InvoiceDatabase invoiceDatabase;
     private final static Logger log = LoggerFactory.getLogger(InvoiceBookMapper.class);
 
@@ -133,8 +135,10 @@ public class InvoiceBookMapper {
         return entry;
     }
 
+    @XmlElement(name = "vat", required = true)
     private static Vat toXmlVat (pl.coderstrust.accounting.model.Vat vat){
-        Vat xmlVat = new Vat();
+        Vat xmlVat = Vat;
+
         return xmlVat;
     }
 }
