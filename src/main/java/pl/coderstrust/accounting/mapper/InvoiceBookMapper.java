@@ -12,7 +12,6 @@ import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -135,7 +134,6 @@ public class InvoiceBookMapper {
         return entry;
     }
 
-    @XmlElement(name = "vat", required = true)
     private static Vat toXmlVat (pl.coderstrust.accounting.model.Vat vat){
         Vat xmlVat = Vat;
 
