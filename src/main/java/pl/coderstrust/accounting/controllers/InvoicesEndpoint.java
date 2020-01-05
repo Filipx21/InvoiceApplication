@@ -1,5 +1,6 @@
 package pl.coderstrust.accounting.controllers;
 
+import io.spring.guides.gs_producing_web_service.GetDeleteInvoiceByIdRequest;
 import io.spring.guides.gs_producing_web_service.GetDeleteInvoiceByIdResponse;
 import io.spring.guides.gs_producing_web_service.GetFindAllInvoiceByDateRangeResponse;
 import io.spring.guides.gs_producing_web_service.GetFindAllInvoicesResponse;
@@ -50,9 +51,11 @@ public class InvoicesEndpoint {
         GetSaveInvoiceResponse responseSaveInvoice = new GetSaveInvoiceResponse();
         pl.coderstrust.accounting.model.Invoice invoice =
             new pl.coderstrust.accounting.model.Invoice();
+
         Invoice invoiceConverted;
         invoiceDatabase.saveInvoice(invoice);
         invoiceConverted = SoapModelMapper.toSoapInvoice(invoice);
+
         responseSaveInvoice.setInvoice(invoiceConverted);
         getSaveInvoiceRequest.setInvoice(invoiceConverted);
         return responseSaveInvoice;
@@ -60,12 +63,16 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
     @ResponsePayload
-    public Object findInvoiceById
+    public GetFindInvoiceByIdResponse findInvoiceById
         (@RequestPayload GetFindInvoiceByIdRequest getFindInvoiceByIdRequest)
         throws DatatypeConfigurationException {
-        GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
         log.info("Find Invoice by ID SOAP endpoint services");
-        return SoapModelMapper.toInvoice(responseFindInvoiceById);
+        GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
+        Long id = getFindInvoiceByIdRequest.getId();
+        pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
+
+        SoapModelMapper.toSoapInvoice(invoice);
+        return responseFindInvoiceById;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
@@ -73,8 +80,11 @@ public class InvoicesEndpoint {
     public GetFindAllInvoicesResponse findAllInvoices() {
         log.info("Find all invoices SOAP endpoint services");
         GetFindAllInvoicesResponse responseFindAllInvoices = new GetFindAllInvoicesResponse();
+
         List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
-        List<Invoice> soapInvoices = allInvoices.stream().map(SoapModelMapper::toSoapInvoice).collect(Collectors.toList());
+        List<Invoice> soapInvoices = allInvoices.stream()
+            .map(SoapModelMapper::toSoapInvoice).collect(Collectors.toList());
+
         Invoices invoices = new Invoices();
         invoices.getInvoiceList().addAll(soapInvoices);
         responseFindAllInvoices.setInvoices(invoices);
@@ -88,18 +98,21 @@ public class InvoicesEndpoint {
         log.info("Find all invoices by data range SOAP endpoint services");
         GetFindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange =
             new GetFindAllInvoiceByDateRangeResponse();
-        findAllInvoiceByDateRange(localDatefrom, localDateTo);
+
 
         return responseFindAllInvoiceByDateRange;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceById")
     @ResponsePayload
-    public GetDeleteInvoiceByIdResponse deleteInvoiceById(@RequestPayload Long id) {
+    public GetDeleteInvoiceByIdResponse deleteInvoiceById
+        (@RequestPayload GetDeleteInvoiceByIdRequest getDeleteInvoiceById) {
         log.info("Delete invoice by ID SOAP endpoint services");
         GetDeleteInvoiceByIdResponse responseDeleteInvoiceById = new GetDeleteInvoiceByIdResponse();
-        //responseDeleteInvoiceById.setInvoice(invoiceBookMapper.deleteInvoiceById(id));
+        Long id = getDeleteInvoiceById.getId();
+        pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.deleteInvoiceById(id);
 
+        SoapModelMapper.toSoapInvoice(invoice);
         return responseDeleteInvoiceById;
     }
 }
