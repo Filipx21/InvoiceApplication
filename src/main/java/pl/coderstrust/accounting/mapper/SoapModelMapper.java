@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class InvoiceBookMapper {
+public class SoapModelMapper {
 
     private static io.spring.guides.gs_producing_web_service.Vat Vat;
     private final InvoiceDatabase invoiceDatabase;
-    private final static Logger log = LoggerFactory.getLogger(InvoiceBookMapper.class);
+    private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
-    public InvoiceBookMapper(InvoiceDatabase invoiceDatabase) {
+    public SoapModelMapper(InvoiceDatabase invoiceDatabase) {
         this.invoiceDatabase = invoiceDatabase;
     }
 

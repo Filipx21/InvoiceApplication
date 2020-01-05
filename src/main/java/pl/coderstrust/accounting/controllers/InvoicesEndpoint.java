@@ -17,7 +17,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
-import pl.coderstrust.accounting.mapper.InvoiceBookMapper;
+import pl.coderstrust.accounting.mapper.SoapModelMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -29,16 +29,16 @@ import java.util.stream.Collectors;
 public class InvoicesEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 
-    private InvoiceBook invoiceBook;
-    private InvoiceBookMapper invoiceBookMapper;
+    private final InvoiceBook invoiceBook;
+    private final SoapModelMapper soapModelMapper;
     private final InvoiceDatabase invoiceDatabase;
-    private final static Logger log = LoggerFactory.getLogger(InvoiceBookMapper.class);
+    private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
     @Autowired
-    public InvoicesEndpoint(InvoiceBook invoiceBook, InvoiceBookMapper invoiceBookMapper,
+    public InvoicesEndpoint(InvoiceBook invoiceBook, SoapModelMapper soapModelMapper,
                             InvoiceDatabase invoiceDatabase) {
         this.invoiceBook = invoiceBook;
-        this.invoiceBookMapper = invoiceBookMapper;
+        this.soapModelMapper = soapModelMapper;
         this.invoiceDatabase = invoiceDatabase;
     }
 
@@ -50,13 +50,12 @@ public class InvoicesEndpoint {
         GetSaveInvoiceResponse responseSaveInvoice = new GetSaveInvoiceResponse();
         pl.coderstrust.accounting.model.Invoice invoice =
             new pl.coderstrust.accounting.model.Invoice();
-        if (invoice != null) {
-            log.info("Save invoice in InvoiceBook services");
-            invoiceDatabase.saveInvoice(invoice);
-            return responseSaveInvoice;
-        }
-        log.info("Null save invoice SOAP endpoint services");
-        return null;
+        Invoice invoiceConverted;
+        invoiceDatabase.saveInvoice(invoice);
+        invoiceConverted = SoapModelMapper.toSoapInvoice(invoice);
+        responseSaveInvoice.setInvoice(invoiceConverted);
+        getSaveInvoiceRequest.setInvoice(invoiceConverted);
+        return responseSaveInvoice;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
@@ -66,7 +65,7 @@ public class InvoicesEndpoint {
         throws DatatypeConfigurationException {
         GetFindInvoiceByIdResponse responseFindInvoiceById = new GetFindInvoiceByIdResponse();
         log.info("Find Invoice by ID SOAP endpoint services");
-        return InvoiceBookMapper.toInvoice(responseFindInvoiceById);
+        return SoapModelMapper.toInvoice(responseFindInvoiceById);
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
@@ -75,7 +74,7 @@ public class InvoicesEndpoint {
         log.info("Find all invoices SOAP endpoint services");
         GetFindAllInvoicesResponse responseFindAllInvoices = new GetFindAllInvoicesResponse();
         List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
-        List<Invoice> soapInvoices = allInvoices.stream().map(InvoiceBookMapper::toSoapInvoice).collect(Collectors.toList());
+        List<Invoice> soapInvoices = allInvoices.stream().map(SoapModelMapper::toSoapInvoice).collect(Collectors.toList());
         Invoices invoices = new Invoices();
         invoices.getInvoiceList().addAll(soapInvoices);
         responseFindAllInvoices.setInvoices(invoices);
