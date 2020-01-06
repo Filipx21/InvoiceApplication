@@ -38,5 +38,4 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public XsdSchema invoicesSchema() {
         return new SimpleXsdSchema(new ClassPathResource("soap/invoices.xsd"));
     }
-    
 }
