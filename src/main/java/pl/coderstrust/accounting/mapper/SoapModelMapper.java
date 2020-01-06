@@ -38,10 +38,12 @@ public class SoapModelMapper {
         List<InvoiceEntry> entries = invoice.getEntries();
 
         XMLGregorianCalendar xmlDate = null;
-        try {
-            xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString());
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
+        if(date != null) {
+            try {
+                xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString());
+            } catch (DatatypeConfigurationException e) {
+                e.printStackTrace();
+            }
         }
 
         invoiceSoap.setId(id);

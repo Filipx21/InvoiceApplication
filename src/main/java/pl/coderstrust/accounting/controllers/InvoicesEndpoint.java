@@ -2,6 +2,7 @@ package pl.coderstrust.accounting.controllers;
 
 import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdRequest;
 import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdResponse;
+import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeRequest;
 import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeResponse;
 import io.spring.guides.gs_producing_web_service.FindAllInvoicesRequest;
 import io.spring.guides.gs_producing_web_service.FindAllInvoicesResponse;
@@ -22,7 +23,6 @@ import pl.coderstrust.accounting.mapper.SoapModelMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class InvoicesEndpoint {
         this.soapModelMapper = soapModelMapper;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoice")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoiceRequest")
     @ResponsePayload
     public SaveInvoiceResponse saveInvoice(
         @RequestPayload SaveInvoiceRequest saveInvoiceRequest) {
@@ -58,7 +58,7 @@ public class InvoicesEndpoint {
         return responseSaveInvoice;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceById")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceByIdRequest")
     @ResponsePayload
     public FindInvoiceByIdResponse findInvoiceById
         (@RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
@@ -94,10 +94,10 @@ public class InvoicesEndpoint {
         return responseFindAllInvoices;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRange")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRangeRequest")
     @ResponsePayload
     public FindAllInvoiceByDateRangeResponse findAllInvoiceByDateRange
-        (@RequestPayload LocalDate localDatefrom, @RequestPayload LocalDate localDateTo) {
+        (@RequestPayload FindAllInvoiceByDateRangeRequest findAllInvoiceByDateRangeRequest) {
         log.info("Find all invoices by data range SOAP endpoint services");
         FindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange =
             new FindAllInvoiceByDateRangeResponse();
@@ -106,13 +106,13 @@ public class InvoicesEndpoint {
         return responseFindAllInvoiceByDateRange;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceById")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceByIdRequest")
     @ResponsePayload
     public DeleteInvoiceByIdResponse deleteInvoiceById
-        (@RequestPayload DeleteInvoiceByIdRequest getDeleteInvoiceById) {
+        (@RequestPayload DeleteInvoiceByIdRequest deleteInvoiceByIdRequest) {
         log.info("Delete invoice by ID SOAP endpoint services");
         DeleteInvoiceByIdResponse responseDeleteInvoiceById = new DeleteInvoiceByIdResponse();
-        Long id = getDeleteInvoiceById.getId();
+        Long id = deleteInvoiceByIdRequest.getId();
         pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.deleteInvoiceById(id);
 
         SoapModelMapper.toSoapInvoice(invoice);
