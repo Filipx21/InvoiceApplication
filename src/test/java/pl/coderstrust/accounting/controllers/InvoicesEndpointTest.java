@@ -30,11 +30,7 @@ import java.util.List;
 public class InvoicesEndpointTest {
 
     @Autowired
-    private WebServiceConfig webServiceConfig;
-    InvoicesEndpoint invoicesEndpoint;
-
-//    @Value(value = "classpath:requests.xml")
-//    private Resource resource;
+    private InvoicesEndpoint invoicesEndpoint;
 
     @Test
     public void shouldThrowsExceptionForEmptyMemoryDatabase() throws IOException {
