@@ -1,16 +1,16 @@
 package pl.coderstrust.accounting.controllers;
 
+import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdRequest;
+import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdResponse;
+import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeResponse;
 import io.spring.guides.gs_producing_web_service.FindAllInvoicesRequest;
 import io.spring.guides.gs_producing_web_service.FindAllInvoicesResponse;
 import io.spring.guides.gs_producing_web_service.FindInvoiceByIdRequest;
 import io.spring.guides.gs_producing_web_service.FindInvoiceByIdResponse;
-import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdRequest;
-import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdResponse;
-import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeResponse;
-import io.spring.guides.gs_producing_web_service.SaveInvoiceRequest;
-import io.spring.guides.gs_producing_web_service.SaveInvoiceResponse;
 import io.spring.guides.gs_producing_web_service.Invoice;
 import io.spring.guides.gs_producing_web_service.Invoices;
+import io.spring.guides.gs_producing_web_service.SaveInvoiceRequest;
+import io.spring.guides.gs_producing_web_service.SaveInvoiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
 import pl.coderstrust.accounting.mapper.SoapModelMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
@@ -33,15 +32,12 @@ public class InvoicesEndpoint {
 
     private final InvoiceBook invoiceBook;
     private final SoapModelMapper soapModelMapper;
-    private final InvoiceDatabase invoiceDatabase;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
     @Autowired
-    public InvoicesEndpoint(InvoiceBook invoiceBook, SoapModelMapper soapModelMapper,
-                            InvoiceDatabase invoiceDatabase) {
+    public InvoicesEndpoint(InvoiceBook invoiceBook, SoapModelMapper soapModelMapper) {
         this.invoiceBook = invoiceBook;
         this.soapModelMapper = soapModelMapper;
-        this.invoiceDatabase = invoiceDatabase;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoice")
@@ -54,7 +50,7 @@ public class InvoicesEndpoint {
             new pl.coderstrust.accounting.model.Invoice();
 
         Invoice invoiceConverted;
-        invoiceDatabase.saveInvoice(invoice);
+        invoiceBook.saveInvoice(invoice);
         invoiceConverted = SoapModelMapper.toSoapInvoice(invoice);
 
         responseSaveInvoice.setInvoice(invoiceConverted);
@@ -67,16 +63,21 @@ public class InvoicesEndpoint {
     public FindInvoiceByIdResponse findInvoiceById
         (@RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
         throws DatatypeConfigurationException {
+
+        pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
+        invoice.setId(1L);
+        Invoice invoice1 = SoapModelMapper.toSoapInvoice(invoice);
         log.info("Find Invoice by ID SOAP endpoint services");
         FindInvoiceByIdResponse responseFindInvoiceById = new FindInvoiceByIdResponse();
-        Long id = findInvoiceByIdRequest.getId();
-        pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
+        responseFindInvoiceById.setInvoice(invoice1);
+        //Long id = findInvoiceByIdRequest.getId();
+        //pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
 
-        SoapModelMapper.toSoapInvoice(invoice);
+        //SoapModelMapper.toSoapInvoice(invoice);
         return responseFindInvoiceById;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoices")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoicesRequest")
     @ResponsePayload
     public FindAllInvoicesResponse findAllInvoices
         (@RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) {

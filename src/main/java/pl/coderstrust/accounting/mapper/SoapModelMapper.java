@@ -7,7 +7,6 @@ import io.spring.guides.gs_producing_web_service.Vat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.coderstrust.accounting.infrastructure.InvoiceDatabase;
 import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
@@ -24,12 +23,7 @@ import java.util.stream.Collectors;
 public class SoapModelMapper {
 
     private static io.spring.guides.gs_producing_web_service.Vat Vat;
-    private final InvoiceDatabase invoiceDatabase;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
-
-    public SoapModelMapper(InvoiceDatabase invoiceDatabase) {
-        this.invoiceDatabase = invoiceDatabase;
-    }
 
     public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice
         (pl.coderstrust.accounting.model.Invoice invoice) {
@@ -65,11 +59,13 @@ public class SoapModelMapper {
 
         Invoice invoiceModel = new Invoice();
 
-        Long id = invoiceSoap.getId();
-        XMLGregorianCalendar date = invoiceSoap.getDate();
-        io.spring.guides.gs_producing_web_service.Company buyer = invoiceSoap.getBuyer();
-        io.spring.guides.gs_producing_web_service.Company seller = invoiceSoap.getSeller();
-        Entries entries = invoiceSoap.getEntries();
+        io.spring.guides.gs_producing_web_service.Invoice invoice = invoiceSoap.getInvoice();
+
+        Long id = invoice.getId();
+        XMLGregorianCalendar date = invoice.getDate();
+        io.spring.guides.gs_producing_web_service.Company buyer = invoice.getBuyer();
+        io.spring.guides.gs_producing_web_service.Company seller = invoice.getSeller();
+        Entries entries = invoice.getEntries();
 
         XMLGregorianCalendar dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
         LocalDate localDate = LocalDate.of(

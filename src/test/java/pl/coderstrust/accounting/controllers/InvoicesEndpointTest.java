@@ -69,11 +69,6 @@ public class InvoicesEndpointTest {
 
         // When
         saveInvoiceRequest.setInvoice(invoice);
-        findInvoiceByIdResponse.getId();
-        findInvoiceByIdResponse.getDate();
-        findInvoiceByIdResponse.getBuyer();
-        findInvoiceByIdResponse.getSeller();
-        findInvoiceByIdResponse.getEntries();
         invoicesEndpoint.findInvoiceById(findInvoiceByIdRequest);
 
         // Then
