@@ -16,7 +16,8 @@ import org.springframework.xml.xsd.XsdSchema;
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean
-    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
+    public ServletRegistrationBean<MessageDispatcherServlet>
+    messageDispatcherServlet(ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(applicationContext);
         servlet.setTransformWsdlLocations(true);
@@ -37,12 +38,5 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     public XsdSchema invoicesSchema() {
         return new SimpleXsdSchema(new ClassPathResource("soap/invoices.xsd"));
     }
-
-//    @Bean
-//    public InvoicesEndpoint invoicesServiceIntegrationTestClient() {
-//        JaxWsProxyFactoryBean jaxWsProxyFactory = new JaxWsProxyFactoryBean();
-//        jaxWsProxyFactory.setServiceClass(WeatherService.class);
-//        jaxWsProxyFactory.setAddress("http://localhost:8080" + WebServiceConfiguration.BASE_URL + WebServiceConfiguration.SERVICE_URL);
-//        return (WeatherService) jaxWsProxyFactory.create();
-//    }
+    
 }
