@@ -1,7 +1,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
-    <xs:element name="saveInvoiceRequest">
+    <xs:element name="GetSaveInvoiceRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoice" type="tns:invoice"/>
@@ -9,7 +9,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="saveInvoiceResponse">
+    <xs:element name="GetSaveInvoiceResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoice" type="tns:invoice"/>
@@ -17,7 +17,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findInvoiceByIdRequest">
+    <xs:element name="GetFindInvoiceByIdRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="id" type="xs:long"/>
@@ -25,7 +25,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findInvoiceByIdResponse">
+    <xs:element name="GetFindInvoiceByIdResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="id" type="xs:long"/>
@@ -37,12 +37,13 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findAllInvoicesRequest">
+    <xs:element name="GetfindAllInvoicesRequest">
         <xs:complexType>
+            <xs:sequence/>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findAllInvoicesResponse">
+    <xs:element name="GetFindAllInvoicesResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoices" type="tns:invoices"/>
@@ -50,7 +51,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findAllInvoiceByDateRangeRequest">
+    <xs:element name="GetFindAllInvoiceByDateRangeRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="dateFrom" type="xs:date"/>
@@ -59,7 +60,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="findAllInvoiceByDateRangeResponse">
+    <xs:element name="GetFindAllInvoiceByDateRangeResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoices" type="tns:invoice"/>
@@ -67,7 +68,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="deleteInvoiceByIdRequest">
+    <xs:element name="GetDeleteInvoiceByIdRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="id" type="xs:long"/>
@@ -75,7 +76,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="deleteInvoiceByIdResponse">
+    <xs:element name="GetDeleteInvoiceByIdResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="invoice" type="tns:invoice"/>
