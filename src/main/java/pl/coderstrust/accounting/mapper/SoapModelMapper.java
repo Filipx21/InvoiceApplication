@@ -60,7 +60,7 @@ public class SoapModelMapper {
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice (FindInvoiceByIdResponse invoiceSoap)
+    public static Invoice toInvoice(FindInvoiceByIdResponse invoiceSoap)
         throws DatatypeConfigurationException {
 
         Invoice invoiceModel = new Invoice();
@@ -72,10 +72,10 @@ public class SoapModelMapper {
         Entries entries = invoiceSoap.getEntries();
 
         XMLGregorianCalendar dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-            LocalDate localDate = LocalDate.of(
-                dateModel.getYear(),
-                dateModel.getMonth(),
-                dateModel.getDay());
+        LocalDate localDate = LocalDate.of(
+            dateModel.getYear(),
+            dateModel.getMonth(),
+            dateModel.getDay());
 
         invoiceModel.setId(id);
         invoiceModel.setDate(localDate);
@@ -86,8 +86,7 @@ public class SoapModelMapper {
         return invoiceModel;
     }
 
-    private static io.spring.guides.gs_producing_web_service.Company toXmlCompany (Company company){
-
+    private static io.spring.guides.gs_producing_web_service.Company toXmlCompany(Company company) {
         io.spring.guides.gs_producing_web_service.Company soapCompany =
             new io.spring.guides.gs_producing_web_service.Company();
 
@@ -98,8 +97,7 @@ public class SoapModelMapper {
         return soapCompany;
     }
 
-    private static Company toCompanyModel (io.spring.guides.gs_producing_web_service.Company company){
-
+    private static Company toCompanyModel(io.spring.guides.gs_producing_web_service.Company company) {
         Company companyModel = new Company();
 
         companyModel.setId(company.getId());
@@ -109,7 +107,7 @@ public class SoapModelMapper {
         return companyModel;
     }
 
-    private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries){
+    private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries) {
         Entries entries = new Entries();
         List<Entry> entryList = invoiceEntries.stream().map(invoiceEntry ->
             toEntry(invoiceEntry)).collect(Collectors.toList());
@@ -117,14 +115,14 @@ public class SoapModelMapper {
         return entries;
     }
 
-    private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries){
+    private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries) {
         List<InvoiceEntry> entries = new ArrayList<>();
         Entries entries1 = (Entries) invoiceEntries.getEntriesList();
         entries.stream().map(invoiceEntry -> toEntry(invoiceEntry)).collect(Collectors.toList());
         return entries;
     }
 
-    private static Entry toEntry (InvoiceEntry invoiceEntry){
+    private static Entry toEntry(InvoiceEntry invoiceEntry) {
         Entry entry = new Entry();
         entry.setDescription(invoiceEntry.getDescription());
         entry.setId(invoiceEntry.getId());
@@ -134,9 +132,8 @@ public class SoapModelMapper {
         return entry;
     }
 
-    private static Vat toXmlVat (pl.coderstrust.accounting.model.Vat vat){
+    private static Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
         Vat xmlVat = Vat;
-
         return xmlVat;
     }
 }
