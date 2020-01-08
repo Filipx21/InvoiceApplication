@@ -47,10 +47,28 @@ public class SoapModelMapper {
         }
 
         invoiceSoap.setId(id);
-        invoiceSoap.setDate(xmlDate);
-        invoiceSoap.setSeller(toXmlCompany(seller));
-        invoiceSoap.setBuyer(toXmlCompany(buyer));
-        invoiceSoap.setEntries(toEntriesList(entries));
+
+        if (xmlDate != null) {
+            invoiceSoap.setDate(xmlDate);
+        } else
+            log.debug("Date is null");
+            invoiceSoap.setDate(null);
+        if(seller != null) {
+            invoiceSoap.setSeller(toXmlCompany(seller));
+        }
+        else
+            log.debug("Seller is null");
+            invoiceSoap.setSeller(null);
+        if(buyer != null) {
+            invoiceSoap.setBuyer(toXmlCompany(buyer));
+        } else
+            log.debug("Buyer is null");
+            invoiceSoap.setBuyer(null);
+        if(entries != null) {
+            invoiceSoap.setEntries(toEntriesList(entries));
+        } else
+            log.debug("Entries are null");
+            invoiceSoap.setEntries(null);
 
         log.info("Invoice SOAP serialized");
         return invoiceSoap;
@@ -75,11 +93,32 @@ public class SoapModelMapper {
             dateModel.getMonth(),
             dateModel.getDay());
 
-        invoiceModel.setId(id);
-        invoiceModel.setDate(localDate);
-        invoiceModel.setSeller(toCompanyModel(seller));
-        invoiceModel.setBuyer(toCompanyModel(buyer));
-        invoiceModel.setEntries(toEntriesListModel(entries));
+        if (id != null) {
+            invoiceModel.setId(id);
+        }
+        else
+            log.error("ID is null");
+            invoiceModel.setId(null);
+        if (localDate != null) {
+            invoiceModel.setDate(localDate);
+        } else
+            log.debug("Date is null");
+            invoiceModel.setDate(null);
+        if (seller != null) {
+            invoiceModel.setSeller(toCompanyModel(seller));
+        } else
+            log.debug("Seller is null");
+            invoiceModel.setSeller(null);
+        if (buyer != null) {
+            invoiceModel.setBuyer(toCompanyModel(buyer));
+        } else
+            log.debug("Buyer is null");
+        invoiceModel.setBuyer(null);
+        if(entries != null) {
+            invoiceModel.setEntries(toEntriesListModel(entries));
+        } else
+            log.debug("Entries are null");
+            invoiceModel.setEntries(null);
 
         return invoiceModel;
     }
