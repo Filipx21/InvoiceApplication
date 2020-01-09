@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,24 +18,92 @@ class SoapModelMapperTest {
     SoapModelMapper soapModelMapper = new SoapModelMapper();
 
     @Test
-    void shouldConvertInvoiceToSoapInvoice() {
+    void shouldConvertIdInvoiceToSoapIdInvoice() {
+        //given
+        Invoice invoice = new Invoice();
+        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
+        invoice.setId(1L);
+
+        //when
+        invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
+        Long idInvoice = invoice.getId();
+        Long idActual = invoiceSoap.getId();
+
+        //then
+        Assert.assertEquals(idInvoice, idActual);
+    }
+
+    @Test
+    void shouldConvertDateInvoiceToSoapDateInvoice() {
         //given
         Invoice invoice = new Invoice();
         io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
         io.spring.guides.gs_producing_web_service.Invoice invoiceExpected
             = new io.spring.guides.gs_producing_web_service.Invoice();
-        invoice.setId(1L);
-        invoiceExpected.setId(1L);
+        invoice.setId(0L);
+        invoice.setDate(LocalDate.of(2020,1,8));
+        invoiceExpected.setDate(null);
 
         //when
         invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
+        String dateExpected = invoice.getDate().toString();
+        String dateActual = invoiceSoap.getDate().toString();
 
         //then
-        Assert.assertEquals(invoiceExpected.toString(), invoiceSoap.toString());
+        Assert.assertEquals(dateExpected, dateActual);
     }
 
     @Test
-    void shouldConvertSoapInvoiceToInvoice() {
+    void shouldConvertCompanyInvoiceToSoapCompanyInvoice() {
+        //given
+        Invoice invoice = new Invoice();
+        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
+        io.spring.guides.gs_producing_web_service.Invoice invoiceExpected
+            = new io.spring.guides.gs_producing_web_service.Invoice();
+        pl.coderstrust.accounting.model.Company seller = new pl.coderstrust.accounting.model.Company();
+        Company sellerSoap = new Company();
+        Company sellerExpected;
+
+        seller.setId(1L);
+        seller.setTin("Tin example number");
+        seller.setName("Seller example name");
+        seller.setAddress("Example seller Address");
+
+        sellerSoap.setId(1L);
+        sellerSoap.setTin("Tin example number");
+        sellerSoap.setName("Seller example name");
+        sellerSoap.setAddress("Example seller Address");
+
+        invoice.setId(0L);
+        invoice.setSeller(seller);
+        invoiceExpected.setId(0L);
+        invoiceExpected.setSeller(sellerSoap);
+
+        //when
+        invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
+        sellerExpected = invoiceSoap.getSeller();
+
+        //then
+        Assert.assertEquals(sellerExpected, sellerSoap);
+    }
+
+    @Test
+    void shouldConvertSoapInvoiceToInvoice() throws DatatypeConfigurationException {
+        Invoice invoiceModel = new Invoice();
+        Invoice invoiceResult = new Invoice();
+        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap
+            = new io.spring.guides.gs_producing_web_service.Invoice();
+
+        invoiceSoap.setId(1L);
+        invoiceSoap.setDate(null);
+        invoiceModel.setId(1L);
+        invoiceModel.setDate(null);
+
+        invoiceResult = SoapModelMapper.toInvoice(invoiceSoap);
+
+        Assert.assertEquals(invoiceModel, invoiceResult);
+
+
     }
 
     private Invoice prepareInvoice() {

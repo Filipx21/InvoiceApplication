@@ -2,7 +2,6 @@ package pl.coderstrust.accounting.mapper;
 
 import io.spring.guides.gs_producing_web_service.Entries;
 import io.spring.guides.gs_producing_web_service.Entry;
-import io.spring.guides.gs_producing_web_service.FindInvoiceByIdResponse;
 import io.spring.guides.gs_producing_web_service.Vat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +30,10 @@ public class SoapModelMapper {
         io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
             new io.spring.guides.gs_producing_web_service.Invoice();
 
+        if(invoice == null){
+            return null;
+        }
+
         Long id = invoice.getId();
         LocalDate date = invoice.getDate();
         Company buyer = invoice.getBuyer();
@@ -46,40 +49,23 @@ public class SoapModelMapper {
             }
         }
 
-        invoiceSoap.setId(id);
 
-        if (xmlDate != null) {
+            invoiceSoap.setId(id);
             invoiceSoap.setDate(xmlDate);
-        } else
-            log.debug("Date is null");
-            invoiceSoap.setDate(null);
-        if(seller != null) {
             invoiceSoap.setSeller(toXmlCompany(seller));
-        }
-        else
-            log.debug("Seller is null");
-            invoiceSoap.setSeller(null);
-        if(buyer != null) {
             invoiceSoap.setBuyer(toXmlCompany(buyer));
-        } else
-            log.debug("Buyer is null");
-            invoiceSoap.setBuyer(null);
-        if(entries != null) {
             invoiceSoap.setEntries(toEntriesList(entries));
-        } else
-            log.debug("Entries are null");
-            invoiceSoap.setEntries(null);
 
         log.info("Invoice SOAP serialized");
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice(FindInvoiceByIdResponse invoiceSoap)
+    public static Invoice toInvoice(io.spring.guides.gs_producing_web_service.Invoice invoiceSoap)
         throws DatatypeConfigurationException {
 
         Invoice invoiceModel = new Invoice();
-
-        io.spring.guides.gs_producing_web_service.Invoice invoice = invoiceSoap.getInvoice();
+        io.spring.guides.gs_producing_web_service.Invoice invoice
+            = new io.spring.guides.gs_producing_web_service.Invoice();
 
         Long id = invoice.getId();
         XMLGregorianCalendar date = invoice.getDate();
@@ -127,6 +113,9 @@ public class SoapModelMapper {
         io.spring.guides.gs_producing_web_service.Company soapCompany =
             new io.spring.guides.gs_producing_web_service.Company();
 
+        if(company == null) {
+        return null;
+        }
         soapCompany.setId(company.getId());
         soapCompany.setTin(company.getTin());
         soapCompany.setAddress(company.getAddress());
