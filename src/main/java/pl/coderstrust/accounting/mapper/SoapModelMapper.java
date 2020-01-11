@@ -30,7 +30,7 @@ public class SoapModelMapper {
         io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
             new io.spring.guides.gs_producing_web_service.Invoice();
 
-        if(invoice == null){
+        if (invoice == null) {
             return null;
         }
 
@@ -41,7 +41,7 @@ public class SoapModelMapper {
         List<InvoiceEntry> entries = invoice.getEntries();
 
         XMLGregorianCalendar xmlDate = null;
-        if(date != null) {
+        if (date != null) {
             try {
                 xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString());
             } catch (DatatypeConfigurationException e) {
@@ -49,19 +49,17 @@ public class SoapModelMapper {
             }
         }
 
-
-            invoiceSoap.setId(id);
-            invoiceSoap.setDate(xmlDate);
-            invoiceSoap.setSeller(toXmlCompany(seller));
-            invoiceSoap.setBuyer(toXmlCompany(buyer));
-            invoiceSoap.setEntries(toEntriesList(entries));
+        invoiceSoap.setId(id);
+        invoiceSoap.setDate(xmlDate);
+        invoiceSoap.setSeller(toXmlCompany(seller));
+        invoiceSoap.setBuyer(toXmlCompany(buyer));
+        invoiceSoap.setEntries(toEntriesList(entries));
 
         log.info("Invoice SOAP serialized");
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice(io.spring.guides.gs_producing_web_service.Invoice invoiceSoap)
-        throws DatatypeConfigurationException {
+    public static Invoice toInvoice(io.spring.guides.gs_producing_web_service.Invoice invoiceSoap) {
 
         Invoice invoiceModel = new Invoice();
         io.spring.guides.gs_producing_web_service.Invoice invoice
@@ -73,38 +71,25 @@ public class SoapModelMapper {
         io.spring.guides.gs_producing_web_service.Company seller = invoice.getSeller();
         Entries entries = invoice.getEntries();
 
-        XMLGregorianCalendar dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-        LocalDate localDate = LocalDate.of(
-            dateModel.getYear(),
-            dateModel.getMonth(),
-            dateModel.getDay());
-
-        if (id != null) {
-            invoiceModel.setId(id);
+        XMLGregorianCalendar dateModel = null;
+        LocalDate localDate = null;
+        if (date != null) {
+            try {
+                dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+                localDate = LocalDate.of(
+                    dateModel.getYear(),
+                    dateModel.getMonth(),
+                    dateModel.getDay());
+            } catch (DatatypeConfigurationException e) {
+                e.printStackTrace();
+            }
         }
-        else
-            log.error("ID is null");
-            invoiceModel.setId(null);
-        if (localDate != null) {
-            invoiceModel.setDate(localDate);
-        } else
-            log.debug("Date is null");
-            invoiceModel.setDate(null);
-        if (seller != null) {
-            invoiceModel.setSeller(toCompanyModel(seller));
-        } else
-            log.debug("Seller is null");
-            invoiceModel.setSeller(null);
-        if (buyer != null) {
-            invoiceModel.setBuyer(toCompanyModel(buyer));
-        } else
-            log.debug("Buyer is null");
-        invoiceModel.setBuyer(null);
-        if(entries != null) {
-            invoiceModel.setEntries(toEntriesListModel(entries));
-        } else
-            log.debug("Entries are null");
-            invoiceModel.setEntries(null);
+
+        invoiceModel.setId(id);
+        invoiceModel.setDate(localDate);
+        invoiceModel.setSeller(toCompanyModel(seller));
+        invoiceModel.setBuyer(toCompanyModel(buyer));
+        invoiceModel.setEntries(toEntriesListModel(entries));
 
         return invoiceModel;
     }
@@ -113,8 +98,8 @@ public class SoapModelMapper {
         io.spring.guides.gs_producing_web_service.Company soapCompany =
             new io.spring.guides.gs_producing_web_service.Company();
 
-        if(company == null) {
-        return null;
+        if (company == null) {
+            return null;
         }
         soapCompany.setId(company.getId());
         soapCompany.setTin(company.getTin());
@@ -123,7 +108,13 @@ public class SoapModelMapper {
         return soapCompany;
     }
 
-    private static Company toCompanyModel(io.spring.guides.gs_producing_web_service.Company company) {
+    private static Company toCompanyModel(io.spring.guides.gs_producing_web_service.Company company)
+        throws NullPointerException{
+
+        if (company == null){
+            return null;
+        }
+
         Company companyModel = new Company();
 
         companyModel.setId(company.getId());
@@ -134,14 +125,23 @@ public class SoapModelMapper {
     }
 
     private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries) {
+        if (invoiceEntries == null) {
+            return null;
+        }
         Entries entries = new Entries();
         List<Entry> entryList = invoiceEntries.stream().map(invoiceEntry ->
             toEntry(invoiceEntry)).collect(Collectors.toList());
+        if (entryList == null) {
+            return null;
+        }
         entries.getEntriesList().addAll(entryList);
         return entries;
     }
 
     private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries) {
+        if (invoiceEntries == null){
+            return null;
+        }
         List<InvoiceEntry> entries = new ArrayList<>();
         Entries entries1 = (Entries) invoiceEntries.getEntriesList();
         entries.stream().map(invoiceEntry -> toEntry(invoiceEntry)).collect(Collectors.toList());

@@ -43,18 +43,11 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoiceRequest")
     @ResponsePayload
     public SaveInvoiceResponse saveInvoice(
-        @RequestPayload SaveInvoiceRequest saveInvoiceRequest) {
+        @RequestPayload SaveInvoiceRequest saveInvoiceRequest) throws DatatypeConfigurationException {
         log.info("Save invoice SOAP endpoint services");
+        Invoice saveInvoice = SoapModelMapper.toSoapInvoice(invoiceBook.saveInvoice(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())));
         SaveInvoiceResponse responseSaveInvoice = new SaveInvoiceResponse();
-        pl.coderstrust.accounting.model.Invoice invoice =
-            new pl.coderstrust.accounting.model.Invoice();
-
-        Invoice invoiceConverted;
-        invoiceBook.saveInvoice(invoice);
-        invoiceConverted = SoapModelMapper.toSoapInvoice(invoice);
-
-        responseSaveInvoice.setInvoice(invoiceConverted);
-        saveInvoiceRequest.setInvoice(invoiceConverted);
+        responseSaveInvoice.setInvoice(saveInvoice);
         return responseSaveInvoice;
     }
 
@@ -84,8 +77,7 @@ public class InvoicesEndpoint {
         log.info("Find all invoices SOAP endpoint services");
         FindAllInvoicesResponse responseFindAllInvoices = new FindAllInvoicesResponse();
 
-        List<pl.coderstrust.accounting.model.Invoice> allInvoices = invoiceBook.findAllInvoices();
-        List<Invoice> soapInvoices = allInvoices.stream()
+        List<Invoice> soapInvoices = invoiceBook.findAllInvoices().stream()
             .map(SoapModelMapper::toSoapInvoice).collect(Collectors.toList());
 
         Invoices invoices = new Invoices();
@@ -113,9 +105,8 @@ public class InvoicesEndpoint {
         log.info("Delete invoice by ID SOAP endpoint services");
         DeleteInvoiceByIdResponse responseDeleteInvoiceById = new DeleteInvoiceByIdResponse();
         Long id = deleteInvoiceByIdRequest.getId();
-        pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.deleteInvoiceById(id);
 
-        SoapModelMapper.toSoapInvoice(invoice);
+        SoapModelMapper.toSoapInvoice(invoiceBook.deleteInvoiceById(id));
         return responseDeleteInvoiceById;
     }
 }
