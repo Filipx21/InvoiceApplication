@@ -33,7 +33,7 @@ public class InvoicesEndpoint {
 
     private final InvoiceBook invoiceBook;
     private final SoapModelMapper soapModelMapper;
-    private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
+    private static final Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
     @Autowired
     public InvoicesEndpoint(InvoiceBook invoiceBook, SoapModelMapper soapModelMapper) {
@@ -44,9 +44,11 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoiceRequest")
     @ResponsePayload
     public SaveInvoiceResponse saveInvoice(
-        @RequestPayload SaveInvoiceRequest saveInvoiceRequest) throws DatatypeConfigurationException, IOException {
+        @RequestPayload SaveInvoiceRequest saveInvoiceRequest)
+        throws DatatypeConfigurationException, IOException {
         log.info("Save invoice SOAP endpoint services");
-        Invoice saveInvoice = SoapModelMapper.toSoapInvoice(invoiceBook.saveInvoice(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())));
+        Invoice saveInvoice = SoapModelMapper.toSoapInvoice(
+            invoiceBook.saveInvoice(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())));
         SaveInvoiceResponse responseSaveInvoice = new SaveInvoiceResponse();
         responseSaveInvoice.setInvoice(saveInvoice);
         return responseSaveInvoice;
@@ -54,8 +56,8 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findInvoiceByIdRequest")
     @ResponsePayload
-    public FindInvoiceByIdResponse findInvoiceById
-        (@RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
+    public FindInvoiceByIdResponse findInvoiceById(
+        @RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
         throws DatatypeConfigurationException {
 
         pl.coderstrust.accounting.model.Invoice invoice
@@ -72,8 +74,8 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoicesRequest")
     @ResponsePayload
-    public FindAllInvoicesResponse findAllInvoices
-        (@RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) throws IOException {
+    public FindAllInvoicesResponse findAllInvoices(
+        @RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) throws IOException {
         log.info("Find all invoices SOAP endpoint services");
 
         List<Invoice> soapInvoices = invoiceBook.findAllInvoices().stream()
@@ -88,8 +90,8 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoiceByDateRangeRequest")
     @ResponsePayload
-    public FindAllInvoiceByDateRangeResponse findAllInvoiceByDateRange
-        (@RequestPayload FindAllInvoiceByDateRangeRequest findAllInvoiceByDateRangeRequest) {
+    public FindAllInvoiceByDateRangeResponse findAllInvoiceByDateRange(
+        @RequestPayload FindAllInvoiceByDateRangeRequest findAllInvoiceByDateRangeRequest) {
         log.info("Find all invoices by data range SOAP endpoint services");
         FindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange =
             new FindAllInvoiceByDateRangeResponse();
@@ -99,8 +101,8 @@ public class InvoicesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceByIdRequest")
     @ResponsePayload
-    public DeleteInvoiceByIdResponse deleteInvoiceById
-        (@RequestPayload DeleteInvoiceByIdRequest deleteInvoiceByIdRequest) throws IOException {
+    public DeleteInvoiceByIdResponse deleteInvoiceById(
+        @RequestPayload DeleteInvoiceByIdRequest deleteInvoiceByIdRequest) throws IOException {
         log.info("Delete invoice by ID SOAP endpoint services");
         DeleteInvoiceByIdResponse responseDeleteInvoiceById = new DeleteInvoiceByIdResponse();
         Long id = deleteInvoiceByIdRequest.getId();

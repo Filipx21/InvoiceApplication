@@ -5,10 +5,10 @@ import coders_trust.FindAllInvoicesResponse;
 import coders_trust.FindInvoiceByIdRequest;
 import coders_trust.FindInvoiceByIdResponse;
 import coders_trust.Invoice;
+import coders_trust.Invoices;
 import coders_trust.SaveInvoiceRequest;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 @SpringBootTest(classes = AppConfiguration.class)
 @ContextConfiguration(classes= WebServiceConfig.class)
@@ -59,41 +60,50 @@ public class InvoicesEndpointTest {
     }
 
     @Test
-    public void getAllInvoices() throws IOException {
+    public void getInvoiceById() throws IOException {
         // given
+        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
+        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoiceModel);
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
-        FindAllInvoicesRequest findAllInvoicesRequest = new FindAllInvoicesRequest();
-        FindAllInvoicesResponse findAllInvoicesResponse;
-        Invoice invoice = new Invoice();
-        invoice.setId(1L);
+        saveInvoiceRequest.setInvoice(invoiceExpected);
 
         // when
-        saveInvoiceRequest.setInvoice(invoice);
-        findAllInvoicesResponse = invoicesEndpoint.findAllInvoices(findAllInvoicesRequest);
+        coders_trust.Invoice invoiceTemp = saveInvoiceRequest.getInvoice();
+        SoapModelMapper.toInvoice(invoiceTemp);
+        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
+        findInvoiceByIdRequest.setId(invoiceTemp.getId());
+        FindInvoiceByIdResponse findInvoiceByIdResponse = new FindInvoiceByIdResponse();
+        findInvoiceByIdResponse.setInvoice(invoiceTemp);
+        Invoice invoiceResult = findInvoiceByIdResponse.getInvoice();
 
-        // then
-        assertNotNull(findAllInvoicesResponse);
+        //then
+        Assert.assertEquals(invoiceExpected, invoiceResult);
     }
 
     @Test
-    public void getInvoiceById() throws IOException, DatatypeConfigurationException {
+    public void getAllInvoices() throws IOException, DatatypeConfigurationException {
         // given
+        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
+        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoiceModel);
+
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
-        Invoice invoiceSoap = new Invoice();
-        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
-        FindInvoiceByIdResponse findInvoiceByIdResponse = new FindInvoiceByIdResponse();
-        pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
-        invoice.setId(1L);
-        invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
+        saveInvoiceRequest.setInvoice(invoiceExpected);
+
+        Invoices invoicesExpected = new Invoices();
+        List<Invoices> invoicesList = new ArrayList<>();
 
         // when
-        saveInvoiceRequest.setInvoice(invoiceSoap);
+        coders_trust.Invoice invoiceTemp = saveInvoiceRequest.getInvoice();
+        SoapModelMapper.toInvoice(invoiceTemp);
+        invoicesList.add(invoicesExpected);
+        invoicesExpected.getInvoiceList();
 
-        findInvoiceByIdResponse.setInvoice(invoiceSoap);
-        invoicesEndpoint.findInvoiceById(findInvoiceByIdRequest);
+        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
+        findAllInvoicesResponse.setInvoices(invoicesExpected);
+        Invoices invoiceResult = findAllInvoicesResponse.getInvoices();
 
-        // then
-        assertNotNull(findInvoiceByIdResponse);
+        //then
+        Assert.assertEquals(invoicesExpected, invoiceResult);
     }
 
     private pl.coderstrust.accounting.model.Invoice prepareInvoice() {
@@ -102,7 +112,9 @@ public class InvoicesEndpointTest {
         pl.coderstrust.accounting.model.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek z.o.o");
         pl.coderstrust.accounting.model.Company seller = prepareCompany("Gdynia 66-666", "Szczupak z.o.o");
         pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
-        invoice.setId(1L);
+        AtomicLong counter = new AtomicLong(0);
+        Long id = counter.incrementAndGet();
+        invoice.setId(id);
         invoice.setDate(LocalDate.of(
             random.nextInt(120) + 1900,
             random.nextInt(12) + 1,
@@ -120,17 +132,6 @@ public class InvoicesEndpointTest {
             (random.nextInt(999999999) + 9999999) + "",
             city,
             company);
-    }
-
-    private List<pl.coderstrust.accounting.model.Invoice> prepareInvoices() {
-        List<pl.coderstrust.accounting.model.Invoice> invoices = new ArrayList<>();
-        pl.coderstrust.accounting.model.Invoice invoice1 = prepareInvoice();
-        invoices.add(invoice1);
-        pl.coderstrust.accounting.model.Invoice invoice2 = prepareInvoice();
-        invoices.add(invoice2);
-        pl.coderstrust.accounting.model.Invoice invoice3 = prepareInvoice();
-        invoices.add(invoice3);
-        return invoices;
     }
 
 }
