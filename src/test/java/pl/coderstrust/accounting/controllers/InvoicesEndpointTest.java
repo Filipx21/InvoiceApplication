@@ -1,13 +1,13 @@
 package pl.coderstrust.accounting.controllers;
 
-import io.spring.guides.gs_producing_web_service.Company;
-import io.spring.guides.gs_producing_web_service.Entries;
-import io.spring.guides.gs_producing_web_service.FindAllInvoicesRequest;
-import io.spring.guides.gs_producing_web_service.FindAllInvoicesResponse;
-import io.spring.guides.gs_producing_web_service.FindInvoiceByIdRequest;
-import io.spring.guides.gs_producing_web_service.FindInvoiceByIdResponse;
-import io.spring.guides.gs_producing_web_service.Invoice;
-import io.spring.guides.gs_producing_web_service.SaveInvoiceRequest;
+import coders_trust.Company;
+import coders_trust.Entries;
+import coders_trust.FindAllInvoicesRequest;
+import coders_trust.FindAllInvoicesResponse;
+import coders_trust.FindInvoiceByIdRequest;
+import coders_trust.FindInvoiceByIdResponse;
+import coders_trust.Invoice;
+import coders_trust.SaveInvoiceRequest;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,8 +43,8 @@ public class InvoicesEndpointTest {
         // Given
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
         FindAllInvoicesRequest findAllInvoicesRequest = new FindAllInvoicesRequest();
-        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
-        Invoice invoice = prepareInvoice();
+        FindAllInvoicesResponse findAllInvoicesResponse;
+        coders_trust.Invoice invoice = prepareInvoice();
         invoice.setId(1L);
 
         // When
@@ -72,11 +72,11 @@ public class InvoicesEndpointTest {
         assertNotNull(findInvoiceByIdResponse);
     }
 
-    private io.spring.guides.gs_producing_web_service.Invoice prepareInvoice() {
+    private Invoice prepareInvoice() {
         Entries invoiceEntries = new Entries();
-        io.spring.guides.gs_producing_web_service.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek z.o.o");
-        io.spring.guides.gs_producing_web_service.Company seller = prepareCompany("Gdynia 66-666", "Szczupak z.o.o");
-        io.spring.guides.gs_producing_web_service.Invoice invoice = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek z.o.o");
+        coders_trust.Company seller = prepareCompany("Gdynia 66-666", "Szczupak z.o.o");
+        coders_trust.Invoice invoice = new coders_trust.Invoice();
         invoice.setDate(null);
         invoice.setBuyer(buyer);
         invoice.setSeller(seller);
@@ -84,17 +84,17 @@ public class InvoicesEndpointTest {
         return invoice;
     }
 
-    private io.spring.guides.gs_producing_web_service.Company prepareCompany(String city, String company) {
+    private Company prepareCompany(String city, String company) {
         return new Company();
     }
 
-    private List<io.spring.guides.gs_producing_web_service.Invoice> prepareInvoices() {
-        List<io.spring.guides.gs_producing_web_service.Invoice> invoices = new ArrayList<>();
-        io.spring.guides.gs_producing_web_service.Invoice invoice1 = prepareInvoice();
+    private List<coders_trust.Invoice> prepareInvoices() {
+        List<coders_trust.Invoice> invoices = new ArrayList<>();
+        coders_trust.Invoice invoice1 = prepareInvoice();
         invoices.add(invoice1);
-        io.spring.guides.gs_producing_web_service.Invoice invoice2 = prepareInvoice();
+        coders_trust.Invoice invoice2 = prepareInvoice();
         invoices.add(invoice2);
-        io.spring.guides.gs_producing_web_service.Invoice invoice3 = prepareInvoice();
+        coders_trust.Invoice invoice3 = prepareInvoice();
         invoices.add(invoice3);
         return invoices;
     }

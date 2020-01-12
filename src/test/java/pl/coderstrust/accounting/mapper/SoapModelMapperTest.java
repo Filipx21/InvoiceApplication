@@ -1,6 +1,6 @@
 package pl.coderstrust.accounting.mapper;
 
-import io.spring.guides.gs_producing_web_service.Company;
+import coders_trust.Company;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.accounting.model.Invoice;
@@ -16,7 +16,7 @@ class SoapModelMapperTest {
     void shouldConvertIdInvoiceToSoapIdInvoice() {
         //given
         Invoice invoice = new Invoice();
-        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
+        coders_trust.Invoice invoiceSoap;
         invoice.setId(1L);
 
         //when
@@ -32,9 +32,8 @@ class SoapModelMapperTest {
     void shouldConvertDateInvoiceToSoapDateInvoice() {
         //given
         Invoice invoice = new Invoice();
-        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
-        io.spring.guides.gs_producing_web_service.Invoice invoiceExpected
-            = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoiceSoap;
+        coders_trust.Invoice invoiceExpected = new coders_trust.Invoice();
         invoice.setId(0L);
         invoice.setDate(LocalDate.of(2020,1,8));
         invoiceExpected.setDate(null);
@@ -52,9 +51,8 @@ class SoapModelMapperTest {
     void shouldConvertCompanyInvoiceToSoapCompanyInvoice() {
         //given
         Invoice invoice = new Invoice();
-        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap;
-        io.spring.guides.gs_producing_web_service.Invoice invoiceExpected
-            = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoiceSoap;
+        coders_trust.Invoice invoiceExpected = new coders_trust.Invoice();
         pl.coderstrust.accounting.model.Company seller = new pl.coderstrust.accounting.model.Company();
         Company sellerSoap = new Company();
         Company sellerExpected;
@@ -87,8 +85,7 @@ class SoapModelMapperTest {
         //given
         Invoice invoiceModel = new Invoice();
         Invoice invoiceResult;
-        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap
-            = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoiceSoap = new coders_trust.Invoice();
 
         invoiceSoap.setId(0L);
         invoiceSoap.setDate(null);
@@ -106,9 +103,8 @@ class SoapModelMapperTest {
     void shouldConvertInvoiceToSoapInvoice() throws DatatypeConfigurationException {
         //given
         Invoice invoiceModel = new Invoice();
-        io.spring.guides.gs_producing_web_service.Invoice invoiceResult;
-        io.spring.guides.gs_producing_web_service.Invoice invoiceExpected
-            = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoiceResult;
+        coders_trust.Invoice invoiceExpected = new coders_trust.Invoice();
 
         invoiceExpected.setId(0L);
         invoiceModel.setId(0L);

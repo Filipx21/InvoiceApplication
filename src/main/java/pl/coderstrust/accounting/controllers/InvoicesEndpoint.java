@@ -23,6 +23,7 @@ import pl.coderstrust.accounting.mapper.SoapModelMapper;
 import pl.coderstrust.accounting.services.InvoiceBook;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "saveInvoiceRequest")
     @ResponsePayload
     public SaveInvoiceResponse saveInvoice(
-        @RequestPayload SaveInvoiceRequest saveInvoiceRequest) throws DatatypeConfigurationException {
+        @RequestPayload SaveInvoiceRequest saveInvoiceRequest) throws DatatypeConfigurationException, IOException {
         log.info("Save invoice SOAP endpoint services");
         Invoice saveInvoice = SoapModelMapper.toSoapInvoice(invoiceBook.saveInvoice(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())));
         SaveInvoiceResponse responseSaveInvoice = new SaveInvoiceResponse();
@@ -73,7 +74,7 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "findAllInvoicesRequest")
     @ResponsePayload
     public FindAllInvoicesResponse findAllInvoices
-        (@RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) {
+        (@RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) throws IOException {
         log.info("Find all invoices SOAP endpoint services");
         FindAllInvoicesResponse responseFindAllInvoices = new FindAllInvoicesResponse();
 
@@ -100,7 +101,7 @@ public class InvoicesEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "deleteInvoiceByIdRequest")
     @ResponsePayload
     public DeleteInvoiceByIdResponse deleteInvoiceById
-        (@RequestPayload DeleteInvoiceByIdRequest deleteInvoiceByIdRequest) {
+        (@RequestPayload DeleteInvoiceByIdRequest deleteInvoiceByIdRequest) throws IOException {
         log.info("Delete invoice by ID SOAP endpoint services");
         DeleteInvoiceByIdResponse responseDeleteInvoiceById = new DeleteInvoiceByIdResponse();
         Long id = deleteInvoiceByIdRequest.getId();
