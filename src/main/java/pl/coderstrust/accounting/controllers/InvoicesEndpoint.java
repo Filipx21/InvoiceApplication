@@ -58,16 +58,15 @@ public class InvoicesEndpoint {
         (@RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
         throws DatatypeConfigurationException {
 
-        pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
-        invoice.setId(1L);
-        Invoice invoice1 = SoapModelMapper.toSoapInvoice(invoice);
+        pl.coderstrust.accounting.model.Invoice invoice
+            = new pl.coderstrust.accounting.model.Invoice();
+        Long id = findInvoiceByIdRequest.getId();
+        invoice.setId(id);
+        Invoice invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
         log.info("Find Invoice by ID SOAP endpoint services");
         FindInvoiceByIdResponse responseFindInvoiceById = new FindInvoiceByIdResponse();
-        responseFindInvoiceById.setInvoice(invoice1);
-        //Long id = findInvoiceByIdRequest.getId();
-        //pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
+        responseFindInvoiceById.setInvoice(invoiceSoap);
 
-        //SoapModelMapper.toSoapInvoice(invoice);
         return responseFindInvoiceById;
     }
 
@@ -76,13 +75,13 @@ public class InvoicesEndpoint {
     public FindAllInvoicesResponse findAllInvoices
         (@RequestPayload FindAllInvoicesRequest findAllInvoicesRequest) throws IOException {
         log.info("Find all invoices SOAP endpoint services");
-        FindAllInvoicesResponse responseFindAllInvoices = new FindAllInvoicesResponse();
 
         List<Invoice> soapInvoices = invoiceBook.findAllInvoices().stream()
             .map(SoapModelMapper::toSoapInvoice).collect(Collectors.toList());
 
         Invoices invoices = new Invoices();
         invoices.getInvoiceList().addAll(soapInvoices);
+        FindAllInvoicesResponse responseFindAllInvoices = new FindAllInvoicesResponse();
         responseFindAllInvoices.setInvoices(invoices);
         return responseFindAllInvoices;
     }
