@@ -262,6 +262,7 @@
         <configuration>
           <sources>
             <source>${project.basedir}/src/main/resources/soap</source>
+            <generatePackage>pl.coderstrust.soap</generatePackage>
           </sources>
         </configuration>
       </plugin>

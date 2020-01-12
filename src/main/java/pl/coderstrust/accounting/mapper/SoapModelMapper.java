@@ -1,8 +1,7 @@
 package pl.coderstrust.accounting.mapper;
 
-import io.spring.guides.gs_producing_web_service.Entries;
-import io.spring.guides.gs_producing_web_service.Entry;
-import io.spring.guides.gs_producing_web_service.Vat;
+import coders_trust.Entries;
+import coders_trust.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,14 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class SoapModelMapper {
 
-    private static io.spring.guides.gs_producing_web_service.Vat Vat;
+    private static coders_trust.Vat Vat;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
-    public static io.spring.guides.gs_producing_web_service.Invoice toSoapInvoice
-        (pl.coderstrust.accounting.model.Invoice invoice) {
+    public static coders_trust.Invoice toSoapInvoice(Invoice invoice) {
 
-        io.spring.guides.gs_producing_web_service.Invoice invoiceSoap =
-            new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoiceSoap = new coders_trust.Invoice();
 
         if (invoice == null) {
             return null;
@@ -59,16 +56,15 @@ public class SoapModelMapper {
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice(io.spring.guides.gs_producing_web_service.Invoice invoiceSoap) {
+    public static Invoice toInvoice(coders_trust.Invoice invoiceSoap) {
 
         Invoice invoiceModel = new Invoice();
-        io.spring.guides.gs_producing_web_service.Invoice invoice
-            = new io.spring.guides.gs_producing_web_service.Invoice();
+        coders_trust.Invoice invoice = new coders_trust.Invoice();
 
         Long id = invoice.getId();
         XMLGregorianCalendar date = invoice.getDate();
-        io.spring.guides.gs_producing_web_service.Company buyer = invoice.getBuyer();
-        io.spring.guides.gs_producing_web_service.Company seller = invoice.getSeller();
+        coders_trust.Company buyer = invoice.getBuyer();
+        coders_trust.Company seller = invoice.getSeller();
         Entries entries = invoice.getEntries();
 
         XMLGregorianCalendar dateModel = null;
@@ -94,9 +90,8 @@ public class SoapModelMapper {
         return invoiceModel;
     }
 
-    private static io.spring.guides.gs_producing_web_service.Company toXmlCompany(Company company) {
-        io.spring.guides.gs_producing_web_service.Company soapCompany =
-            new io.spring.guides.gs_producing_web_service.Company();
+    private static coders_trust.Company toXmlCompany(Company company) {
+        coders_trust.Company soapCompany = new coders_trust.Company();
 
         if (company == null) {
             return null;
@@ -108,7 +103,7 @@ public class SoapModelMapper {
         return soapCompany;
     }
 
-    private static Company toCompanyModel(io.spring.guides.gs_producing_web_service.Company company)
+    private static Company toCompanyModel(coders_trust.Company company)
         throws NullPointerException{
 
         if (company == null){
@@ -149,6 +144,9 @@ public class SoapModelMapper {
     }
 
     private static Entry toEntry(InvoiceEntry invoiceEntry) {
+        if (invoiceEntry == null){
+            return null;
+        }
         Entry entry = new Entry();
         entry.setDescription(invoiceEntry.getDescription());
         entry.setId(invoiceEntry.getId());
@@ -158,8 +156,10 @@ public class SoapModelMapper {
         return entry;
     }
 
-    private static Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
-        Vat xmlVat = Vat;
-        return xmlVat;
+    private static coders_trust.Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
+
+        coders_trust.Vat vatSoap = Vat;
+
+        return vatSoap;
     }
 }

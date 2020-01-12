@@ -1,17 +1,17 @@
 package pl.coderstrust.accounting.controllers;
 
-import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdRequest;
-import io.spring.guides.gs_producing_web_service.DeleteInvoiceByIdResponse;
-import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeRequest;
-import io.spring.guides.gs_producing_web_service.FindAllInvoiceByDateRangeResponse;
-import io.spring.guides.gs_producing_web_service.FindAllInvoicesRequest;
-import io.spring.guides.gs_producing_web_service.FindAllInvoicesResponse;
-import io.spring.guides.gs_producing_web_service.FindInvoiceByIdRequest;
-import io.spring.guides.gs_producing_web_service.FindInvoiceByIdResponse;
-import io.spring.guides.gs_producing_web_service.Invoice;
-import io.spring.guides.gs_producing_web_service.Invoices;
-import io.spring.guides.gs_producing_web_service.SaveInvoiceRequest;
-import io.spring.guides.gs_producing_web_service.SaveInvoiceResponse;
+import coders_trust.DeleteInvoiceByIdRequest;
+import coders_trust.DeleteInvoiceByIdResponse;
+import coders_trust.FindAllInvoiceByDateRangeRequest;
+import coders_trust.FindAllInvoiceByDateRangeResponse;
+import coders_trust.FindAllInvoicesRequest;
+import coders_trust.FindAllInvoicesResponse;
+import coders_trust.FindInvoiceByIdRequest;
+import coders_trust.FindInvoiceByIdResponse;
+import coders_trust.Invoice;
+import coders_trust.Invoices;
+import coders_trust.SaveInvoiceRequest;
+import coders_trust.SaveInvoiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Endpoint
 public class InvoicesEndpoint {
-    private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+    private static final String NAMESPACE_URI = "coders-trust";
 
     private final InvoiceBook invoiceBook;
     private final SoapModelMapper soapModelMapper;
@@ -93,7 +93,6 @@ public class InvoicesEndpoint {
         log.info("Find all invoices by data range SOAP endpoint services");
         FindAllInvoiceByDateRangeResponse responseFindAllInvoiceByDateRange =
             new FindAllInvoiceByDateRangeResponse();
-
 
         return responseFindAllInvoiceByDateRange;
     }
