@@ -58,14 +58,13 @@ public class InvoicesEndpoint {
     @ResponsePayload
     public FindInvoiceByIdResponse findInvoiceById(
         @RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
-        throws DatatypeConfigurationException {
+        throws IOException {
 
-        pl.coderstrust.accounting.model.Invoice invoice
-            = new pl.coderstrust.accounting.model.Invoice();
-        Long id = findInvoiceByIdRequest.getId();
-        invoice.setId(id);
-        Invoice invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
         log.info("Find Invoice by ID SOAP endpoint services");
+        Long id = findInvoiceByIdRequest.getId();
+        pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
+        Invoice invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
+
         FindInvoiceByIdResponse responseFindInvoiceById = new FindInvoiceByIdResponse();
         responseFindInvoiceById.setInvoice(invoiceSoap);
 
