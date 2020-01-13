@@ -54,30 +54,30 @@ class SoapModelMapperTest {
         coders_trust.Invoice invoiceSoap;
         coders_trust.Invoice invoiceExpected = new coders_trust.Invoice();
         pl.coderstrust.accounting.model.Company seller = new pl.coderstrust.accounting.model.Company();
-        Company sellerSoap = new Company();
-        Company sellerExpected;
+        Company sellerExpected = new Company();
+        Company sellerResult;
 
         seller.setId(1L);
         seller.setTin("Tin example number");
         seller.setName("Seller example name");
         seller.setAddress("Example seller Address");
 
-        sellerSoap.setId(1L);
-        sellerSoap.setTin("Tin example number");
-        sellerSoap.setName("Seller example name");
-        sellerSoap.setAddress("Example seller Address");
+        sellerExpected.setId(1L);
+        sellerExpected.setTin("Tin example number");
+        sellerExpected.setName("Seller example name");
+        sellerExpected.setAddress("Example seller Address");
 
         invoice.setId(0L);
         invoice.setSeller(seller);
         invoiceExpected.setId(0L);
-        invoiceExpected.setSeller(sellerSoap);
+        invoiceExpected.setSeller(sellerExpected);
 
         //when
         invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
-        sellerExpected = invoiceSoap.getSeller();
+        sellerResult = invoiceSoap.getSeller();
 
         //then
-        Assert.assertEquals(sellerExpected, sellerSoap);
+        Assert.assertEquals(sellerExpected, sellerResult);
     }
 
     @Test
