@@ -1,5 +1,6 @@
 package pl.coderstrust.accounting.controllers;
 
+import coders_trust.Entries;
 import coders_trust.FindAllInvoicesRequest;
 import coders_trust.FindAllInvoicesResponse;
 import coders_trust.FindInvoiceByIdRequest;
@@ -18,12 +19,15 @@ import pl.coderstrust.accounting.config.WebServiceConfig;
 import pl.coderstrust.accounting.mapper.SoapModelMapper;
 import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.InvoiceEntry;
+import pl.coderstrust.accounting.repositories.memory.InMemoryDatabase;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -34,8 +38,12 @@ public class InvoicesEndpointTest {
     @Autowired
     private InvoicesEndpoint invoicesEndpoint;
 
+    @Autowired
+    private InMemoryDatabase inMemoryDatabase;
+
+
     @Test
-    public void shouldThrowsExceptionForEmptyMemoryDatabase() throws IOException {
+    public void shouldThrowsExceptionForEmptyMemoryDatabase() {
         // given, when, then
         FindAllInvoicesRequest findAllInvoicesRequest = new FindAllInvoicesRequest();
         assertThrows(NullPointerException.class, () -> {
@@ -44,19 +52,38 @@ public class InvoicesEndpointTest {
     }
 
     @Test
-    public void shouldSaveInvoiceInMemoryDatabaseAndFindItInDatabaseForReturn() {
+    public void shouldSaveInvoiceInMemoryDatabase() {
         // given
-        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
-        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoiceModel);
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
+        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
+        pl.coderstrust.accounting.model.Invoice invoice = inMemoryDatabase.saveInvoice(invoiceModel);
+        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoice);
         saveInvoiceRequest.setInvoice(invoiceExpected);
 
         // when
         coders_trust.Invoice invoiceResult = saveInvoiceRequest.getInvoice();
-        SoapModelMapper.toInvoice(invoiceResult);
+
 
         //then
-        Assert.assertEquals(invoiceExpected, invoiceResult);
+        Long idExpected = Objects.requireNonNull(invoiceExpected).getId();
+        Long idResult = invoiceResult.getId();
+        Assert.assertEquals(idExpected, idResult);
+
+        XMLGregorianCalendar dateExpected = invoiceExpected.getDate();
+        XMLGregorianCalendar dateResult = invoiceResult.getDate();
+        Assert.assertEquals(dateExpected, dateResult);
+
+        coders_trust.Company sellerExpected = invoiceExpected.getSeller();
+        coders_trust.Company sellerResult = invoiceResult.getSeller();
+        Assert.assertEquals(sellerExpected, sellerResult);
+
+        coders_trust.Company buyerExpected = invoiceExpected.getBuyer();
+        coders_trust.Company buyerResult = invoiceResult.getBuyer();
+        Assert.assertEquals(buyerExpected, buyerResult);
+
+        Entries entriesExpected = invoiceExpected.getEntries();
+        Entries entriesResult = invoiceResult.getEntries();
+        Assert.assertEquals(entriesExpected, entriesResult);
     }
 
     @Test
