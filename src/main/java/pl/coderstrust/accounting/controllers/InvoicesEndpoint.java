@@ -49,8 +49,7 @@ public class InvoicesEndpoint {
         log.info("Save invoice SOAP endpoint services");
         pl.coderstrust.accounting.model.Invoice invoice = SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice());
         pl.coderstrust.accounting.model.Invoice invoice1 = invoiceBook.saveInvoice(invoice);
-        Invoice saveInvoice = SoapModelMapper.toSoapInvoice(
-            invoice1);
+        Invoice saveInvoice = SoapModelMapper.toSoapInvoice(invoice1);
         SaveInvoiceResponse responseSaveInvoice = new SaveInvoiceResponse();
         responseSaveInvoice.setInvoice(saveInvoice);
         return responseSaveInvoice;
@@ -112,4 +111,5 @@ public class InvoicesEndpoint {
         responseDeleteInvoiceById.setInvoice(invoiceToDelete);
         return responseDeleteInvoiceById;
     }
+
 }
