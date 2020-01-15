@@ -1,5 +1,7 @@
 package pl.coderstrust.accounting.mapper;
 
+import ct_invoice_soap.Entries;
+import ct_invoice_soap.Entry;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import pl.coderstrust.accounting.model.Company;
@@ -38,8 +40,8 @@ class SoapModelMapperTest {
     void shouldConvertDateInvoiceToSoapDateInvoice() {
         //given
         Invoice invoice = new Invoice();
-        ct-invoice-soap.Invoice invoiceSoap;
-        ct-invoice-soap.Invoice invoiceExpected = new ct-invoice-soap.Invoice();
+        ct_invoice_soap.Invoice invoiceSoap;
+        ct_invoice_soap.Invoice invoiceExpected = new ct_invoice_soap.Invoice();
         invoice.setId(0L);
         invoice.setDate(LocalDate.of(2020,1,8));
         invoiceExpected.setDate(null);
@@ -57,11 +59,11 @@ class SoapModelMapperTest {
     void shouldConvertCompanyInvoiceToSoapCompanyInvoice() {
         //given
         Invoice invoice = new Invoice();
-        ct-invoice-soap.Invoice invoiceSoap;
-        ct-invoice-soap.Invoice invoiceExpected = new ct-invoice-soap.Invoice();
+        ct_invoice_soap.Invoice invoiceSoap;
+        ct_invoice_soap.Invoice invoiceExpected = new ct_invoice_soap.Invoice();
         pl.coderstrust.accounting.model.Company seller = new pl.coderstrust.accounting.model.Company();
-        Company sellerExpected = new Company();
-        Company sellerResult;
+        ct_invoice_soap.Company sellerExpected = new ct_invoice_soap.Company();
+        ct_invoice_soap.Company sellerResult;
 
         seller.setId(1L);
         seller.setTin("Tin example number");
@@ -91,27 +93,75 @@ class SoapModelMapperTest {
         //given
         Invoice invoiceExpected = new Invoice();
         Invoice invoiceResult;
-        coders_trust.Invoice invoiceSoap = new coders_trust.Invoice();
-        XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar("2000-03-04T20:00:00Z");
+        ct_invoice_soap.Invoice invoiceSoap = new ct_invoice_soap.Invoice();
+        XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().
+            newXMLGregorianCalendarDate(2000, 3, 4, 0);
+        ct_invoice_soap.Company buyer = new ct_invoice_soap.Company();
+        buyer.setId(1L);
+        buyer.setAddress("Buyer address");
+        buyer.setName("Buyer name");
+        buyer.setTin("123");
+        ct_invoice_soap.Company seller = new ct_invoice_soap.Company();
+        seller.setId(1L);
+        seller.setAddress("Seller address");
+        seller.setName("Seller name");
+        seller.setTin("456");
+        Entries entries = new Entries();
+        List<Entry> listEntrySoap = new ArrayList<>();
+        entries.getEntriesList();
 
-        invoiceSoap.setId(0L);
+        Company buyerModel = new Company();
+        buyerModel.setId(1L);
+        buyerModel.setAddress("Buyer address");
+        buyerModel.setName("Buyer name");
+        buyerModel.setTin("123");
+        Company sellerModel = new Company();
+        sellerModel.setId(1L);
+        sellerModel.setAddress("Seller address");
+        sellerModel.setName("Seller name");
+        sellerModel.setTin("456");
+        List<InvoiceEntry> entriesModel = new ArrayList<>();
+
+        invoiceSoap.setId(1L);
         invoiceSoap.setDate(xmlGregorianCalendar);
-        invoiceExpected.setId(0L);
-        invoiceExpected.setDate(null);
+        invoiceSoap.setBuyer(buyer);
+        invoiceSoap.setSeller(seller);
+        invoiceSoap.setEntries(entries);
+
+        invoiceExpected.setId(1L);
+        invoiceExpected.setDate(LocalDate.of(2000, 3,4));
+        invoiceExpected.setBuyer(buyerModel);
+        invoiceExpected.setSeller(sellerModel);
+        invoiceExpected.setEntries(entriesModel);
 
         //when
         invoiceResult = SoapModelMapper.toInvoice(invoiceSoap);
+        Long idResultSoap = invoiceResult.getId();
+        LocalDate dateResultSoap = invoiceResult.getDate();
+        Company buyerResultSoap = invoiceResult.getBuyer();
+        Company sellerResultSoap = invoiceResult.getSeller();
+        List<InvoiceEntry> entriesResultSoap = invoiceResult.getEntries();
+
+        Long idExpected = invoiceExpected.getId();
+        LocalDate dateExpected = invoiceExpected.getDate();
+        Company buyerExpected = invoiceExpected.getBuyer();
+        Company sellerExpected = invoiceExpected.getSeller();
+        List<InvoiceEntry> entriesExpected = invoiceExpected.getEntries();
 
         //then
-        Assert.assertEquals(invoiceExpected, invoiceResult);
+        Assert.assertEquals(idExpected, idResultSoap);
+        Assert.assertEquals(dateExpected, dateResultSoap);
+        Assert.assertEquals(buyerExpected, buyerResultSoap);
+        Assert.assertEquals(sellerExpected, sellerResultSoap);
+        Assert.assertEquals(entriesExpected, entriesResultSoap);
     }
 
     @Test
     void shouldConvertInvoiceToSoapInvoice() throws DatatypeConfigurationException {
         //given
         Invoice invoiceModel = new Invoice();
-        coders_trust.Invoice invoiceResult;
-        coders_trust.Invoice invoiceExpected = new coders_trust.Invoice();
+        ct_invoice_soap.Invoice invoiceResult;
+        ct_invoice_soap.Invoice invoiceExpected = new ct_invoice_soap.Invoice();
 
         invoiceExpected.setId(0L);
         invoiceModel.setId(0L);
@@ -123,30 +173,25 @@ class SoapModelMapperTest {
         Assert.assertEquals(invoiceExpected, invoiceResult);
     }
 
-    private pl.coderstrust.accounting.model.Invoice prepareInvoice() {
+    private ct_invoice_soap.Invoice prepareInvoice() {
         Random random = new Random();
-        List<InvoiceEntry> invoiceEntries = new ArrayList<>();
-        pl.coderstrust.accounting.model.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek z.o.o");
-        pl.coderstrust.accounting.model.Company seller = prepareCompany("Gdynia 66-666", "Szczupak z.o.o");
-        pl.coderstrust.accounting.model.Invoice invoice = new pl.coderstrust.accounting.model.Invoice();
+        Entries invoiceEntries = new Entries();
+        ct_invoice_soap.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek Sp. z.o.o");
+        ct_invoice_soap.Company seller = prepareCompany("Gdynia 66-666", "Szczupak Sp. z.o.o");
+        ct_invoice_soap.Invoice invoice = new ct_invoice_soap.Invoice();
         invoice.setId(random.nextLong());
-        invoice.setDate(LocalDate.of(
-            random.nextInt(120) + 1900,
-            random.nextInt(12) + 1,
-            random.nextInt(25) + 1));
+//        invoice.setDate((
+//            random.nextInt(120) + 1900, random.nextInt(12) + 1,
+//            random.nextInt(25) + 1);
         invoice.setBuyer(buyer);
         invoice.setSeller(seller);
         invoice.setEntries(invoiceEntries);
         return invoice;
     }
 
-    private pl.coderstrust.accounting.model.Company prepareCompany(String city, String company) {
+    private ct_invoice_soap.Company prepareCompany(String city, String company) {
         Random random = new Random();
-        return new pl.coderstrust.accounting.model.Company(
-            (long) (random.nextInt(10000) + 1),
-            (random.nextInt(999999999) + 9999999) + "",
-            city,
-            company);
+        return new ct_invoice_soap.Company();
     }
 
 }

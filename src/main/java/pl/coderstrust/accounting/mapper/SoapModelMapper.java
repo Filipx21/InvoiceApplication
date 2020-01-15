@@ -2,6 +2,7 @@ package pl.coderstrust.accounting.mapper;
 
 import ct_invoice_soap.Entries;
 import ct_invoice_soap.Entry;
+import ct_invoice_soap.Vat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class SoapModelMapper {
 
     private static ct_invoice_soap.Vat Vat;
+    private static pl.coderstrust.accounting.model.Vat vatModel;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
     public static ct_invoice_soap.Invoice toSoapInvoice(Invoice invoice) {
@@ -61,24 +63,20 @@ public class SoapModelMapper {
         Invoice invoiceModel = new Invoice();
         ct_invoice_soap.Invoice invoice = new ct_invoice_soap.Invoice();
 
-        Long id = invoice.getId();
-        XMLGregorianCalendar date = invoice.getDate();
-        ct_invoice_soap.Company buyer = invoice.getBuyer();
-        ct_invoice_soap.Company seller = invoice.getSeller();
-        Entries entries = invoice.getEntries();
+        Long id = invoiceSoap.getId();
+        XMLGregorianCalendar date = invoiceSoap.getDate();
+        ct_invoice_soap.Company buyer = invoiceSoap.getBuyer();
+        ct_invoice_soap.Company seller = invoiceSoap.getSeller();
+        Entries entries = invoiceSoap.getEntries();
 
-        XMLGregorianCalendar dateModel = null;
+        XMLGregorianCalendar dateModel;
         LocalDate localDate = null;
         if (date != null) {
-            try {
-                dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-                localDate = LocalDate.of(
-                    dateModel.getYear(),
-                    dateModel.getMonth(),
-                    dateModel.getDay());
-            } catch (DatatypeConfigurationException e) {
-                e.printStackTrace();
-            }
+            //dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+            localDate = LocalDate.of(
+                date.getYear(),
+                date.getMonth(),
+                date.getDay());
         }
 
         invoiceModel.setId(id);
@@ -104,19 +102,18 @@ public class SoapModelMapper {
     }
 
     private static Company toCompanyModel(ct_invoice_soap.Company company)
-        throws NullPointerException{
-
-        if (company == null){
+        throws NullPointerException {
+        Company companyModel = new Company();
+        if (company == null) {
             return null;
         }
-
-        Company companyModel = new Company();
 
         companyModel.setId(company.getId());
         companyModel.setTin(company.getTin());
         companyModel.setAddress(company.getAddress());
         companyModel.setName(company.getName());
         return companyModel;
+
     }
 
     private static Entries toEntriesList(List<InvoiceEntry> invoiceEntries) {
@@ -131,17 +128,17 @@ public class SoapModelMapper {
     }
 
     private static List<InvoiceEntry> toEntriesListModel(Entries invoiceEntries) {
-        if (invoiceEntries == null){
+        if (invoiceEntries == null) {
             return null;
         }
         List<InvoiceEntry> entries = new ArrayList<>();
-        Entries entries1 = (Entries) invoiceEntries.getEntriesList();
+        List<ct_invoice_soap.Entry> entries1 = invoiceEntries.getEntriesList();
         entries.stream().map(invoiceEntry -> toEntry(invoiceEntry)).collect(Collectors.toList());
         return entries;
     }
 
     private static Entry toEntry(InvoiceEntry invoiceEntry) {
-        if (invoiceEntry == null){
+        if (invoiceEntry == null) {
             return null;
         }
         Entry entry = new Entry();
@@ -153,10 +150,31 @@ public class SoapModelMapper {
         return entry;
     }
 
+    private static InvoiceEntry toInvoiceEntry (Entry entry){
+        if (entry == null) {
+            return null;
+        }
+        InvoiceEntry invoiceEntry = new InvoiceEntry();
+        invoiceEntry.setDescription(entry.getDescription());
+        invoiceEntry.setId(entry.getId());
+        invoiceEntry.setPrice(entry.getPrice());
+        invoiceEntry.setVatRate(toVat(entry.getVatRate()));
+        invoiceEntry.setVatValue(entry.getVatValue());
+
+        return invoiceEntry;
+    }
+
+
     private static ct_invoice_soap.Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
 
         ct_invoice_soap.Vat vatSoap = Vat;
 
         return vatSoap;
+    }
+
+    private static pl.coderstrust.accounting.model.Vat toVat(Vat vat){
+        pl.coderstrust.accounting.model.Vat vatConvertedModel = vatModel;
+
+        return vatConvertedModel;
     }
 }

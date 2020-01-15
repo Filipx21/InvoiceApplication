@@ -1,15 +1,15 @@
 package pl.coderstrust.accounting.controllers;
 
-import coders_trust.FindAllInvoicesRequest;
-import coders_trust.FindAllInvoicesResponse;
-import coders_trust.FindInvoiceByIdRequest;
-import coders_trust.FindInvoiceByIdResponse;
-import coders_trust.Invoice;
-import coders_trust.Invoices;
-import coders_trust.SaveInvoiceRequest;
-import coders_trust.SaveInvoiceResponse;
+import ct_invoice_soap.DeleteInvoiceByIdRequest;
+import ct_invoice_soap.DeleteInvoiceByIdResponse;
+import ct_invoice_soap.FindAllInvoicesRequest;
+import ct_invoice_soap.Invoice;
+import ct_invoice_soap.SaveInvoiceRequest;
+import ct_invoice_soap.SaveInvoiceResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,8 +51,8 @@ public class InvoicesEndpointTest {
 
     @Test
     public void shouldSaveInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
-        // given
 
+        // given
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
         pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();
         Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
@@ -62,55 +62,71 @@ public class InvoicesEndpointTest {
 
         // when
         SaveInvoiceResponse saveInvoiceResponse = invoicesEndpoint.saveInvoice(saveInvoiceRequest);
+
+        //then
         assertThat(SoapModelMapper.toInvoice(saveInvoiceResponse.getInvoice())).
             isEqualToComparingFieldByField(invoiceExpected);
     }
 
     @Test
-    public void getInvoiceById() throws IOException {
+    public void shouldUpdateInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
+
         // given
-        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
-        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoiceModel);
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
-        saveInvoiceRequest.setInvoice(invoiceExpected);
+        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();
+        Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
+        saveInvoiceRequest.setInvoice(invoiceTest);
 
-        // when
-        coders_trust.Invoice invoiceTemp = saveInvoiceRequest.getInvoice();
-        SoapModelMapper.toInvoice(invoiceTemp);
-        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
-        findInvoiceByIdRequest.setId(invoiceTemp.getId());
-        FindInvoiceByIdResponse findInvoiceByIdResponse = new FindInvoiceByIdResponse();
-        findInvoiceByIdResponse.setInvoice(invoiceTemp);
-        Invoice invoiceResult = findInvoiceByIdResponse.getInvoice();
+        pl.coderstrust.accounting.model.Invoice invoiceExpected = prepareInvoice();
+        doReturn(invoiceExpected).when(invoiceBook).saveInvoice(invoiceModel);
 
-        //then
-        Assert.assertEquals(invoiceExpected, invoiceResult);
+        SaveInvoiceResponse saveInvoiceResponse = invoicesEndpoint.saveInvoice(saveInvoiceRequest);
+
+
+
+        SaveInvoiceRequest saveInvoiceRequestUpdate = new SaveInvoiceRequest();
+        pl.coderstrust.accounting.model.Invoice newInvoiceModel = prepareInvoice();
+        Invoice invoiceTestUpdate = SoapModelMapper.toSoapInvoice(newInvoiceModel);
+        saveInvoiceRequest.setInvoice(invoiceTestUpdate);
+
+        pl.coderstrust.accounting.model.Invoice invoiceExpectedUpdate = prepareInvoice();
+        doReturn(invoiceExpectedUpdate).when(invoiceBook).saveInvoice(newInvoiceModel);
+
+        SaveInvoiceResponse saveInvoiceResponseUpdate = invoicesEndpoint.saveInvoice(saveInvoiceRequestUpdate);
+
+        newInvoiceModel.setId(invoiceExpected.getId());
+        pl.coderstrust.accounting.model.Invoice result = invoiceBook.saveInvoice(newInvoiceModel);
+        List<pl.coderstrust.accounting.model.Invoice> results = invoiceBook.findAllInvoices();
+
+        MatcherAssert.assertThat(results.size(), is(1));
+        assertEquals(invoiceExpected.getId(), result.getId());
     }
 
     @Test
-    public void getAllInvoices() throws IOException, DatatypeConfigurationException {
+    public void shouldDeteleInvoiceWithInvoiceBook() throws IOException, DatatypeConfigurationException {
+
         // given
-        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();;
-        Invoice invoiceExpected = SoapModelMapper.toSoapInvoice(invoiceModel);
-
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
-        saveInvoiceRequest.setInvoice(invoiceExpected);
+        pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();
+        Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
+        saveInvoiceRequest.setInvoice(invoiceTest);
 
-        Invoices invoicesExpected = new Invoices();
-        List<Invoices> invoicesList = new ArrayList<>();
+        pl.coderstrust.accounting.model.Invoice invoiceExpected = prepareInvoice();
+        doReturn(invoiceExpected).when(invoiceBook).saveInvoice(invoiceModel);
+
+        DeleteInvoiceByIdRequest deleteInvoiceByIdRequest = new DeleteInvoiceByIdRequest();
+        pl.coderstrust.accounting.model.Invoice invoiceResult = prepareInvoice();
+        deleteInvoiceByIdRequest.setId(invoiceModel.getId());
+        doReturn(invoiceResult).when(invoiceBook).deleteInvoiceById(invoiceModel.getId());
 
         // when
-        coders_trust.Invoice invoiceTemp = saveInvoiceRequest.getInvoice();
-        SoapModelMapper.toInvoice(invoiceTemp);
-        invoicesList.add(invoicesExpected);
-        invoicesExpected.getInvoiceList();
-
-        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
-        findAllInvoicesResponse.setInvoices(invoicesExpected);
-        Invoices invoiceResult = findAllInvoicesResponse.getInvoices();
+        SaveInvoiceResponse saveInvoiceResponse = invoicesEndpoint.saveInvoice(saveInvoiceRequest);
+        DeleteInvoiceByIdResponse deleteInvoiceByIdResponse = invoicesEndpoint.deleteInvoiceById(deleteInvoiceByIdRequest);
 
         //then
-        Assert.assertEquals(invoicesExpected, invoiceResult);
+        assertThat(SoapModelMapper.toInvoice(saveInvoiceResponse.getInvoice())).
+            isEqualToComparingFieldByField(deleteInvoiceByIdResponse.getInvoice());
+
     }
 
     private pl.coderstrust.accounting.model.Invoice prepareInvoice() {

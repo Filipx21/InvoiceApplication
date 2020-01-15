@@ -1,17 +1,17 @@
 package pl.coderstrust.accounting.controllers;
 
-import coders_trust.DeleteInvoiceByIdRequest;
-import coders_trust.DeleteInvoiceByIdResponse;
-import coders_trust.FindAllInvoiceByDateRangeRequest;
-import coders_trust.FindAllInvoiceByDateRangeResponse;
-import coders_trust.FindAllInvoicesRequest;
-import coders_trust.FindAllInvoicesResponse;
-import coders_trust.FindInvoiceByIdRequest;
-import coders_trust.FindInvoiceByIdResponse;
-import coders_trust.Invoice;
-import coders_trust.Invoices;
-import coders_trust.SaveInvoiceRequest;
-import coders_trust.SaveInvoiceResponse;
+import ct_invoice_soap.DeleteInvoiceByIdRequest;
+import ct_invoice_soap.DeleteInvoiceByIdResponse;
+import ct_invoice_soap.FindAllInvoiceByDateRangeRequest;
+import ct_invoice_soap.FindAllInvoiceByDateRangeResponse;
+import ct_invoice_soap.FindAllInvoicesRequest;
+import ct_invoice_soap.FindAllInvoicesResponse;
+import ct_invoice_soap.FindInvoiceByIdRequest;
+import ct_invoice_soap.FindInvoiceByIdResponse;
+import ct_invoice_soap.Invoice;
+import ct_invoice_soap.Invoices;
+import ct_invoice_soap.SaveInvoiceRequest;
+import ct_invoice_soap.SaveInvoiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +108,8 @@ public class InvoicesEndpoint {
         DeleteInvoiceByIdResponse responseDeleteInvoiceById = new DeleteInvoiceByIdResponse();
         Long id = deleteInvoiceByIdRequest.getId();
 
-        SoapModelMapper.toSoapInvoice(invoiceBook.deleteInvoiceById(id));
+        Invoice invoiceToDelete = SoapModelMapper.toSoapInvoice(invoiceBook.deleteInvoiceById(id));
+        responseDeleteInvoiceById.setInvoice(invoiceToDelete);
         return responseDeleteInvoiceById;
     }
 }
