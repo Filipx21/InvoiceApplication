@@ -1,5 +1,5 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="coders-trust"
-           targetNamespace="coders-trust" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="ct-invoice-soap"
+           targetNamespace="ct-invoice-soap" elementFormDefault="qualified">
 
     <xs:element name="saveInvoiceRequest">
         <xs:complexType>

@@ -1,7 +1,7 @@
 package pl.coderstrust.accounting.mapper;
 
-import coders_trust.Entries;
-import coders_trust.Entry;
+import ct_invoice_soap.Entries;
+import ct_invoice_soap.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 @Service
 public class SoapModelMapper {
 
-    private static coders_trust.Vat Vat;
+    private static ct_invoice_soap.Vat Vat;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
 
-    public static coders_trust.Invoice toSoapInvoice(Invoice invoice) {
+    public static ct_invoice_soap.Invoice toSoapInvoice(Invoice invoice) {
 
-        coders_trust.Invoice invoiceSoap = new coders_trust.Invoice();
+        ct_invoice_soap.Invoice invoiceSoap = new ct_invoice_soap.Invoice();
 
         if (invoice == null) {
             return null;
@@ -56,15 +56,15 @@ public class SoapModelMapper {
         return invoiceSoap;
     }
 
-    public static Invoice toInvoice(coders_trust.Invoice invoiceSoap) {
+    public static Invoice toInvoice(ct_invoice_soap.Invoice invoiceSoap) {
 
         Invoice invoiceModel = new Invoice();
-        coders_trust.Invoice invoice = new coders_trust.Invoice();
+        ct_invoice_soap.Invoice invoice = new ct_invoice_soap.Invoice();
 
         Long id = invoice.getId();
         XMLGregorianCalendar date = invoice.getDate();
-        coders_trust.Company buyer = invoice.getBuyer();
-        coders_trust.Company seller = invoice.getSeller();
+        ct_invoice_soap.Company buyer = invoice.getBuyer();
+        ct_invoice_soap.Company seller = invoice.getSeller();
         Entries entries = invoice.getEntries();
 
         XMLGregorianCalendar dateModel = null;
@@ -90,8 +90,8 @@ public class SoapModelMapper {
         return invoiceModel;
     }
 
-    private static coders_trust.Company toXmlCompany(Company company) {
-        coders_trust.Company soapCompany = new coders_trust.Company();
+    private static ct_invoice_soap.Company toXmlCompany(Company company) {
+        ct_invoice_soap.Company soapCompany = new ct_invoice_soap.Company();
 
         if (company == null) {
             return null;
@@ -103,7 +103,7 @@ public class SoapModelMapper {
         return soapCompany;
     }
 
-    private static Company toCompanyModel(coders_trust.Company company)
+    private static Company toCompanyModel(ct_invoice_soap.Company company)
         throws NullPointerException{
 
         if (company == null){
@@ -124,11 +124,8 @@ public class SoapModelMapper {
             return null;
         }
         Entries entries = new Entries();
-        List<Entry> entryList = invoiceEntries.stream().map(invoiceEntry ->
-            toEntry(invoiceEntry)).collect(Collectors.toList());
-        if (entryList == null) {
-            return null;
-        }
+        List<Entry> entryList = invoiceEntries.stream().map(SoapModelMapper::toEntry).
+            collect(Collectors.toList());
         entries.getEntriesList().addAll(entryList);
         return entries;
     }
@@ -156,9 +153,9 @@ public class SoapModelMapper {
         return entry;
     }
 
-    private static coders_trust.Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
+    private static ct_invoice_soap.Vat toXmlVat(pl.coderstrust.accounting.model.Vat vat) {
 
-        coders_trust.Vat vatSoap = Vat;
+        ct_invoice_soap.Vat vatSoap = Vat;
 
         return vatSoap;
     }

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Endpoint
 public class InvoicesEndpoint {
-    private static final String NAMESPACE_URI = "coders-trust";
+    private static final String NAMESPACE_URI = "ct-invoice-soap";
 
     private final InvoiceBook invoiceBook;
     private final SoapModelMapper soapModelMapper;
@@ -47,8 +47,10 @@ public class InvoicesEndpoint {
         @RequestPayload SaveInvoiceRequest saveInvoiceRequest)
         throws DatatypeConfigurationException, IOException {
         log.info("Save invoice SOAP endpoint services");
+        pl.coderstrust.accounting.model.Invoice invoice = SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice());
+        pl.coderstrust.accounting.model.Invoice invoice1 = invoiceBook.saveInvoice(invoice);
         Invoice saveInvoice = SoapModelMapper.toSoapInvoice(
-            invoiceBook.saveInvoice(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())));
+            invoice1);
         SaveInvoiceResponse responseSaveInvoice = new SaveInvoiceResponse();
         responseSaveInvoice.setInvoice(saveInvoice);
         return responseSaveInvoice;
