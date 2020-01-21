@@ -164,7 +164,9 @@ class SoapModelMapperTest {
         ct_invoice_soap.Invoice invoiceExpected = new ct_invoice_soap.Invoice();
 
         invoiceExpected.setId(0L);
+        invoiceExpected.setDate();
         invoiceModel.setId(0L);
+        invoiceModel.setDate(LocalDate.of(2020, 01, 21));
 
         //when
         invoiceResult = SoapModelMapper.toSoapInvoice(invoiceModel);
