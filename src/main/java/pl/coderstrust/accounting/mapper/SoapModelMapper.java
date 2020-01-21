@@ -24,6 +24,32 @@ public class SoapModelMapper {
     private static ct_invoice_soap.Vat Vat;
     private static pl.coderstrust.accounting.model.Vat vatModel;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
+    private Invoice invoice;
+    private ct_invoice_soap.Invoice invoiceSoap;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SoapModelMapper)) {
+            return false;
+        }
+
+        SoapModelMapper that = (SoapModelMapper) o;
+
+        if (!invoice.equals(that.invoice)) {
+            return false;
+        }
+        return invoiceSoap.equals(that.invoiceSoap);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = invoice.hashCode();
+        result = 31 * result + invoiceSoap.hashCode();
+        return result;
+    }
 
     public static ct_invoice_soap.Invoice toSoapInvoice(Invoice invoice) {
         if (invoice == null) {

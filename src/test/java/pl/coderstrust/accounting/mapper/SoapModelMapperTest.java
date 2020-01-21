@@ -173,16 +173,18 @@ class SoapModelMapperTest {
         Assert.assertEquals(invoiceExpected, invoiceResult);
     }
 
-    private ct_invoice_soap.Invoice prepareInvoice() {
+    private ct_invoice_soap.Invoice prepareInvoice() throws DatatypeConfigurationException {
         Random random = new Random();
         Entries invoiceEntries = new Entries();
         ct_invoice_soap.Company buyer = prepareCompany("Wrocław 66-666", "TurboMarek Sp. z.o.o");
         ct_invoice_soap.Company seller = prepareCompany("Gdynia 66-666", "Szczupak Sp. z.o.o");
         ct_invoice_soap.Invoice invoice = new ct_invoice_soap.Invoice();
         invoice.setId(random.nextLong());
-//        invoice.setDate((
-//            random.nextInt(120) + 1900, random.nextInt(12) + 1,
-//            random.nextInt(25) + 1);
+        XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().
+            newXMLGregorianCalendarDate(random.nextInt(120) + 1900,
+                random.nextInt(12) + 1 ,
+                random.nextInt(30) + 1,
+                0);
         invoice.setBuyer(buyer);
         invoice.setSeller(seller);
         invoice.setEntries(invoiceEntries);
@@ -192,6 +194,42 @@ class SoapModelMapperTest {
     private ct_invoice_soap.Company prepareCompany(String city, String company) {
         Random random = new Random();
         return new ct_invoice_soap.Company();
+    }
+
+    private Invoice prepareModelInvoice() {
+        Random random = new Random();
+        List<InvoiceEntry> invoiceEntries = new ArrayList<>();
+        Company buyer = prepareModelCompany("Wrocław 66-666", "TurboMarek Sp. z.o.o");
+        Company seller = prepareModelCompany("Gdynia 66-666", "Szczupak Sp. z.o.o");
+        Invoice invoice = new Invoice();
+        invoice.setDate(LocalDate.of(
+            random.nextInt(120) + 1900,
+            random.nextInt(12) + 1,
+            random.nextInt(25) + 1));
+        invoice.setBuyer(buyer);
+        invoice.setSeller(seller);
+        invoice.setEntries(invoiceEntries);
+        return invoice;
+    }
+
+    private Company prepareModelCompany(String city, String company) {
+        Random random = new Random();
+        return new Company(
+            (long) (random.nextInt(10000) + 1),
+            (random.nextInt(999999999) + 9999999) + "",
+            city,
+            company);
+    }
+
+    private List<Invoice> prepareModelInvoices() {
+        List<Invoice> invoices = new ArrayList<>();
+        Invoice invoice1 = prepareModelInvoice();
+        invoices.add(invoice1);
+        Invoice invoice2 = prepareModelInvoice();
+        invoices.add(invoice2);
+        Invoice invoice3 = prepareModelInvoice();
+        invoices.add(invoice3);
+        return invoices;
     }
 
 }
