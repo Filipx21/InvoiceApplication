@@ -162,17 +162,34 @@ class SoapModelMapperTest {
         Invoice invoiceModel = new Invoice();
         ct_invoice_soap.Invoice invoiceResult;
         ct_invoice_soap.Invoice invoiceExpected = new ct_invoice_soap.Invoice();
+        XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().
+            newXMLGregorianCalendarDate(2020, 01, 21, 0);
 
         invoiceExpected.setId(0L);
-        invoiceExpected.setDate();
         invoiceModel.setId(0L);
-        invoiceModel.setDate(LocalDate.of(2020, 01, 21));
 
         //when
         invoiceResult = SoapModelMapper.toSoapInvoice(invoiceModel);
 
+
+        Long idResultSoap = invoiceResult.getId();
+        XMLGregorianCalendar dateResultSoap = invoiceResult.getDate();
+        ct_invoice_soap.Company buyerResultSoap = invoiceResult.getBuyer();
+        ct_invoice_soap.Company sellerResultSoap = invoiceResult.getSeller();
+        List<InvoiceEntry> entriesResultSoap = (List<InvoiceEntry>) invoiceResult.getEntries();
+
+        Long idExpected = invoiceExpected.getId();
+        XMLGregorianCalendar dateExpected = invoiceExpected.getDate();
+        ct_invoice_soap.Company buyerExpected = invoiceExpected.getBuyer();
+        ct_invoice_soap.Company sellerExpected = invoiceExpected.getSeller();
+        List<InvoiceEntry> entriesExpected = (List<InvoiceEntry>) invoiceExpected.getEntries();
+
         //then
-        Assert.assertEquals(invoiceExpected, invoiceResult);
+        Assert.assertEquals(idExpected, idResultSoap);
+        Assert.assertEquals(dateExpected, dateResultSoap);
+        Assert.assertEquals(buyerExpected, buyerResultSoap);
+        Assert.assertEquals(sellerExpected, sellerResultSoap);
+        Assert.assertEquals(entriesExpected, entriesResultSoap);
     }
 
     private ct_invoice_soap.Invoice prepareInvoice() throws DatatypeConfigurationException {
