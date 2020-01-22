@@ -27,30 +27,6 @@ public class SoapModelMapper {
     private Invoice invoice;
     private ct_invoice_soap.Invoice invoiceSoap;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SoapModelMapper)) {
-            return false;
-        }
-
-        SoapModelMapper that = (SoapModelMapper) o;
-
-        if (!invoice.equals(that.invoice)) {
-            return false;
-        }
-        return invoiceSoap.equals(that.invoiceSoap);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = invoice.hashCode();
-        result = 31 * result + invoiceSoap.hashCode();
-        return result;
-    }
-
     public static ct_invoice_soap.Invoice toSoapInvoice(Invoice invoice) {
         if (invoice == null) {
             return null;
