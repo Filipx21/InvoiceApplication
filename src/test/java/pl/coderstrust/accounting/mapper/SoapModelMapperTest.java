@@ -84,8 +84,21 @@ class SoapModelMapperTest {
         invoiceSoap = SoapModelMapper.toSoapInvoice(invoice);
         sellerResult = invoiceSoap.getSeller();
 
+        Long idExpected = sellerExpected.getId();
+        String tinExpected = sellerExpected.getTin();
+        String nameExpected = sellerExpected.getName();
+        String addressExpected = sellerExpected.getAddress();
+
+        Long idResult = sellerResult.getId();
+        String tinResult = sellerResult.getTin();
+        String nameResult = sellerResult.getName();
+        String addressResult = sellerResult.getAddress();
+
         //then
-        Assert.assertEquals(sellerExpected, sellerResult);
+        Assert.assertEquals(idExpected, idResult);
+        Assert.assertEquals(tinExpected, tinResult);
+        Assert.assertEquals(nameExpected, nameResult);
+        Assert.assertEquals(addressExpected, addressResult);
     }
 
     @Test
