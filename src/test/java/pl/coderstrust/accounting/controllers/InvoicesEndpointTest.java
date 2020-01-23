@@ -103,7 +103,7 @@ public class InvoicesEndpointTest {
     }
 
     @Test
-    public void shouldDeteleInvoiceWithInvoiceBook() throws IOException, DatatypeConfigurationException {
+    public void shouldDeteleInvoiceUsingInvoiceBook() throws IOException, DatatypeConfigurationException {
 
         // given
         pl.coderstrust.accounting.model.Invoice invoice = prepareInvoice();
@@ -126,7 +126,7 @@ public class InvoicesEndpointTest {
         DeleteInvoiceByIdResponse deleteInvoiceByIdResponse = invoicesEndpoint.deleteInvoiceById(deleteInvoiceByIdRequest);
 
         //then
-        assertThat(SoapModelMapper.toInvoice(saveInvoiceResponse.getInvoice())).
+        assertThat(SoapModelMapper.toInvoice(saveInvoiceRequest.getInvoice())).
             isEqualToComparingFieldByField(deleteInvoiceByIdResponse.getInvoice());
 
     }

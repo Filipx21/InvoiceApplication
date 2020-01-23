@@ -24,8 +24,6 @@ public class SoapModelMapper {
     private static ct_invoice_soap.Vat Vat;
     private static pl.coderstrust.accounting.model.Vat vatModel;
     private final static Logger log = LoggerFactory.getLogger(SoapModelMapper.class);
-    private Invoice invoice;
-    private ct_invoice_soap.Invoice invoiceSoap;
 
     public static ct_invoice_soap.Invoice toSoapInvoice(Invoice invoice) {
         if (invoice == null) {
@@ -74,7 +72,6 @@ public class SoapModelMapper {
             XMLGregorianCalendar dateModel;
             LocalDate localDate = null;
             if (date != null) {
-                //dateModel = DatatypeFactory.newInstance().newXMLGregorianCalendar();
                 localDate = LocalDate.of(
                     date.getYear(),
                     date.getMonth(),
