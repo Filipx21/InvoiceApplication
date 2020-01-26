@@ -60,7 +60,6 @@ public class InvoicesEndpoint {
     public FindInvoiceByIdResponse findInvoiceById(
         @RequestPayload FindInvoiceByIdRequest findInvoiceByIdRequest)
         throws IOException {
-
         log.info("Find Invoice by ID SOAP endpoint services");
         Long id = findInvoiceByIdRequest.getId();
         pl.coderstrust.accounting.model.Invoice invoice = invoiceBook.findInvoiceById(id);
