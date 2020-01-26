@@ -86,8 +86,6 @@ public class InvoicesEndpointTest {
 
         SaveInvoiceResponse saveInvoiceResponse = invoicesEndpoint.saveInvoice(saveInvoiceRequest);
 
-
-
         SaveInvoiceRequest saveInvoiceRequestUpdate = new SaveInvoiceRequest();
         pl.coderstrust.accounting.model.Invoice newInvoiceModel = prepareInvoice();
         Invoice invoiceTestUpdate = SoapModelMapper.toSoapInvoice(newInvoiceModel);
@@ -131,22 +129,40 @@ public class InvoicesEndpointTest {
 
         Long idExpected = saveInvoiceRequest.getInvoice().getId();
         XMLGregorianCalendar dateExpected = saveInvoiceRequest.getInvoice().getDate();
-        ct_invoice_soap.Company sellerExpected = saveInvoiceRequest.getInvoice().getSeller();
-        ct_invoice_soap.Company buyerExpected = saveInvoiceRequest.getInvoice().getBuyer();
-        Entries entriesExpected = saveInvoiceRequest.getInvoice().getEntries();
+        Long idSellerExpected = saveInvoiceRequest.getInvoice().getSeller().getId();
+        String nameSellerExpected = saveInvoiceRequest.getInvoice().getSeller().getName();
+        String addressSellerExpected = saveInvoiceRequest.getInvoice().getSeller().getAddress();
+        String tinSellerExpected = saveInvoiceRequest.getInvoice().getSeller().getTin();
+        Long idBuyerExpected = saveInvoiceRequest.getInvoice().getBuyer().getId();
+        String nameBuyerExpected = saveInvoiceRequest.getInvoice().getBuyer().getName();
+        String addressBuyerExpected = saveInvoiceRequest.getInvoice().getBuyer().getAddress();
+        String tinBuyerExpected = saveInvoiceRequest.getInvoice().getBuyer().getTin();
+        List<Entry> entriesExpected = saveInvoiceRequest.getInvoice().getEntries().getEntriesList();
 
         Long idResult = deleteInvoiceByIdResponse.getInvoice().getId();
         XMLGregorianCalendar dateResult = deleteInvoiceByIdResponse.getInvoice().getDate();
-        ct_invoice_soap.Company sellerResult = deleteInvoiceByIdResponse.getInvoice().getSeller();
-        ct_invoice_soap.Company buyerResult = deleteInvoiceByIdResponse.getInvoice().getBuyer();
-        Entries entriesResult = deleteInvoiceByIdResponse.getInvoice().getEntries();
+        Long idSellerResult = deleteInvoiceByIdResponse.getInvoice().getSeller().getId();
+        String nameSellerResult = deleteInvoiceByIdResponse.getInvoice().getSeller().getName();
+        String addressSellerResult = deleteInvoiceByIdResponse.getInvoice().getSeller().getAddress();
+        String tinSellerResult = deleteInvoiceByIdResponse.getInvoice().getSeller().getTin();
+        Long idBuyerResult = deleteInvoiceByIdResponse.getInvoice().getBuyer().getId();
+        String nameBuyerResult = deleteInvoiceByIdResponse.getInvoice().getBuyer().getName();
+        String addressBuyerResult = deleteInvoiceByIdResponse.getInvoice().getBuyer().getAddress();
+        String tinBuyerResult = deleteInvoiceByIdResponse.getInvoice().getBuyer().getTin();
+        List<Entry> entriesResult = deleteInvoiceByIdResponse.getInvoice().getEntries().getEntriesList();
 
         //then
         assertEquals(idExpected, idResult);
         assertEquals(dateExpected, dateResult);
-        //assertEquals(sellerExpected, sellerResult);
-        //assertEquals(buyerExpected, buyerResult);
-        //assertEquals(entriesExpected, entriesResult);
+        assertEquals(idSellerExpected, idSellerResult);
+        assertEquals(nameSellerExpected, nameSellerResult);
+        assertEquals(addressSellerExpected, addressSellerResult);
+        assertEquals(tinSellerExpected, tinSellerResult);
+        assertEquals(idBuyerExpected, idBuyerResult);
+        assertEquals(nameBuyerExpected, nameBuyerResult);
+        assertEquals(addressBuyerExpected, addressBuyerResult);
+        assertEquals(tinBuyerExpected, tinBuyerResult);
+        assertEquals(entriesExpected, entriesResult);
     }
 
     private pl.coderstrust.accounting.model.Invoice prepareInvoice() {
