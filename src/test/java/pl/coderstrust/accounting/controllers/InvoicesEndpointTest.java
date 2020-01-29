@@ -5,6 +5,7 @@ import ct_invoice_soap.DeleteInvoiceByIdResponse;
 import ct_invoice_soap.Entries;
 import ct_invoice_soap.Entry;
 import ct_invoice_soap.FindAllInvoicesRequest;
+import ct_invoice_soap.FindAllInvoicesResponse;
 import ct_invoice_soap.Invoice;
 import ct_invoice_soap.SaveInvoiceRequest;
 import ct_invoice_soap.SaveInvoiceResponse;
@@ -73,6 +74,26 @@ public class InvoicesEndpointTest {
     }
 
     @Test
+    public void shouldFindAllInvoicesFromInvoiceBook() throws IOException {
+        // given
+        pl.coderstrust.accounting.model.Invoice invoice = prepareInvoice();
+        SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
+        pl.coderstrust.accounting.model.Invoice invoiceModel = invoice;
+        Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
+        saveInvoiceRequest.setInvoice(invoiceTest);
+
+        // when
+        pl.coderstrust.accounting.model.Invoice invoiceExpected = invoice;
+        doReturn(invoiceExpected).when(invoiceBook).saveInvoice(invoiceModel);
+
+        FindAllInvoicesRequest findAllInvoicesRequest = new FindAllInvoicesRequest();
+        pl.coderstrust.accounting.model.Invoice invoiceResult = invoice;
+        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
+        findAllInvoicesResponse.getInvoices();
+        doReturn(invoiceResult).when(invoiceBook).deleteInvoiceById(invoiceModel.getId());
+    }
+
+    @Test
     public void shouldUpdateInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
 
         // given
@@ -125,7 +146,8 @@ public class InvoicesEndpointTest {
         deleteInvoiceByIdRequest.setId(invoiceModel.getId());
         doReturn(invoiceResult).when(invoiceBook).deleteInvoiceById(invoiceModel.getId());
 
-        DeleteInvoiceByIdResponse deleteInvoiceByIdResponse = invoicesEndpoint.deleteInvoiceById(deleteInvoiceByIdRequest);
+        DeleteInvoiceByIdResponse deleteInvoiceByIdResponse =
+            invoicesEndpoint.deleteInvoiceById(deleteInvoiceByIdRequest);
 
         Long idExpected = saveInvoiceRequest.getInvoice().getId();
         XMLGregorianCalendar dateExpected = saveInvoiceRequest.getInvoice().getDate();
