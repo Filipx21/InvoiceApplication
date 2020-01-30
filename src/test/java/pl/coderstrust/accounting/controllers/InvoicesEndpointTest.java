@@ -75,7 +75,7 @@ public class InvoicesEndpointTest {
     }
 
     @Test
-    public void shouldFindAllInvoicesNullFromInvoiceBook() throws IOException {
+    public void shouldFindAllInvoicesFromInvoiceBook() throws IOException {
         // given
         pl.coderstrust.accounting.model.Invoice invoice = prepareInvoice();
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
@@ -83,17 +83,20 @@ public class InvoicesEndpointTest {
         Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
         saveInvoiceRequest.setInvoice(invoiceTest);
         Invoices invoices = new Invoices();
+        invoices.getInvoiceList().add(0, invoiceTest);
 
         // when
-        pl.coderstrust.accounting.model.Invoice invoiceExpected = invoice;
         List<pl.coderstrust.accounting.model.Invoice> invoicesExpected = invoiceBook.findAllInvoices();
+        invoicesExpected.add(0, invoiceModel);
+        pl.coderstrust.accounting.model.Invoice invoiceExpected = invoicesExpected.get(0);
 
-        pl.coderstrust.accounting.model.Invoice invoiceResult = invoice;
         FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
         findAllInvoicesResponse.setInvoices(invoices);
         List<Invoice> invoicesResult = findAllInvoicesResponse.getInvoices().getInvoiceList();
+        pl.coderstrust.accounting.model.Invoice invoiceResult = SoapModelMapper.toInvoice(findAllInvoicesResponse.getInvoices().getInvoiceList().get(0));
 
-        assertEquals(invoicesExpected, invoicesResult);
+        // then
+        assertEquals(invoiceExpected, invoiceResult);
     }
 
     @Test
