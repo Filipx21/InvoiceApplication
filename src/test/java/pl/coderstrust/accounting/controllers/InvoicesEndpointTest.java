@@ -6,6 +6,7 @@ import ct_invoice_soap.Entries;
 import ct_invoice_soap.Entry;
 import ct_invoice_soap.FindAllInvoicesRequest;
 import ct_invoice_soap.FindAllInvoicesResponse;
+import ct_invoice_soap.FindInvoiceByIdRequest;
 import ct_invoice_soap.Invoice;
 import ct_invoice_soap.Invoices;
 import ct_invoice_soap.SaveInvoiceRequest;
@@ -191,6 +192,18 @@ public class InvoicesEndpointTest {
         assertEquals(addressBuyerExpected, addressBuyerResult);
         assertEquals(tinBuyerExpected, tinBuyerResult);
         assertEquals(entriesExpected, entriesResult);
+    }
+
+    @Test
+    public void shouldThrowExceptionForOutsideRepositoryFindInvoice (){
+        // given, when, then
+        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
+        findInvoiceByIdRequest.setId(100L);
+        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
+        findAllInvoicesResponse.getInvoices();
+        assertThrows(NullPointerException.class, () -> {
+            invoicesEndpoint.findInvoiceById(findInvoiceByIdRequest);
+        });
     }
 
     private pl.coderstrust.accounting.model.Invoice prepareInvoice() {
