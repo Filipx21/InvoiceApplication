@@ -7,6 +7,7 @@ import ct_invoice_soap.Entry;
 import ct_invoice_soap.FindAllInvoicesRequest;
 import ct_invoice_soap.FindAllInvoicesResponse;
 import ct_invoice_soap.FindInvoiceByIdRequest;
+import ct_invoice_soap.FindInvoiceByIdResponse;
 import ct_invoice_soap.Invoice;
 import ct_invoice_soap.Invoices;
 import ct_invoice_soap.SaveInvoiceRequest;
@@ -46,15 +47,6 @@ public class InvoicesEndpointTest {
 
     @InjectMocks
     private InvoicesEndpoint invoicesEndpoint;
-
-    @Test
-    public void shouldThrowsExceptionForEmptyMemoryDatabase() {
-        // given, when, then
-        FindAllInvoicesRequest findAllInvoicesRequest = new FindAllInvoicesRequest();
-        assertThrows(NullPointerException.class, () -> {
-            invoicesEndpoint.findAllInvoices(findAllInvoicesRequest);
-        });
-    }
 
     @Test
     public void shouldSaveInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
@@ -101,7 +93,7 @@ public class InvoicesEndpointTest {
     }
 
     @Test
-    public void shouldUpdateInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
+    public void shouldFindInvoiceByIdFromInvoiceBook() throws IOException, DatatypeConfigurationException {
 
         // given
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
@@ -109,27 +101,25 @@ public class InvoicesEndpointTest {
         Invoice invoiceTest = SoapModelMapper.toSoapInvoice(invoiceModel);
         saveInvoiceRequest.setInvoice(invoiceTest);
 
+        // when
         pl.coderstrust.accounting.model.Invoice invoiceExpected = prepareInvoice();
         doReturn(invoiceExpected).when(invoiceBook).saveInvoice(invoiceModel);
 
         SaveInvoiceResponse saveInvoiceResponse = invoicesEndpoint.saveInvoice(saveInvoiceRequest);
 
-        SaveInvoiceRequest saveInvoiceRequestUpdate = new SaveInvoiceRequest();
-        pl.coderstrust.accounting.model.Invoice newInvoiceModel = prepareInvoice();
-        Invoice invoiceTestUpdate = SoapModelMapper.toSoapInvoice(newInvoiceModel);
-        saveInvoiceRequest.setInvoice(invoiceTestUpdate);
+        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
+        findInvoiceByIdRequest.setId(invoiceExpected.getId());
+        FindInvoiceByIdResponse findInvoiceByIdResponse =
+            invoicesEndpoint.findInvoiceById(findInvoiceByIdRequest);
+        Invoice invoiceResult = new Invoice();
+        invoiceResult.setId(invoiceTest.getId());
+        findInvoiceByIdResponse.setInvoice(invoiceResult);
 
-        pl.coderstrust.accounting.model.Invoice invoiceExpectedUpdate = prepareInvoice();
-        doReturn(invoiceExpectedUpdate).when(invoiceBook).saveInvoice(newInvoiceModel);
+        Long idExpected = saveInvoiceRequest.getInvoice().getId();
+        Long idResult = findInvoiceByIdResponse.getInvoice().getId();
 
-        SaveInvoiceResponse saveInvoiceResponseUpdate = invoicesEndpoint.saveInvoice(saveInvoiceRequestUpdate);
-
-        newInvoiceModel.setId(invoiceExpected.getId());
-        pl.coderstrust.accounting.model.Invoice result = invoiceBook.saveInvoice(newInvoiceModel);
-        List<pl.coderstrust.accounting.model.Invoice> results = invoiceBook.findAllInvoices();
-
-        MatcherAssert.assertThat(results.size(), is(1));
-        assertEquals(invoiceExpected.getId(), result.getId());
+        //then
+        assertEquals(idExpected, idResult);
     }
 
     @Test
@@ -192,18 +182,6 @@ public class InvoicesEndpointTest {
         assertEquals(addressBuyerExpected, addressBuyerResult);
         assertEquals(tinBuyerExpected, tinBuyerResult);
         assertEquals(entriesExpected, entriesResult);
-    }
-
-    @Test
-    public void shouldThrowExceptionForOutsideRepositoryFindInvoice (){
-        // given, when, then
-        FindInvoiceByIdRequest findInvoiceByIdRequest = new FindInvoiceByIdRequest();
-        findInvoiceByIdRequest.setId(100L);
-        FindAllInvoicesResponse findAllInvoicesResponse = new FindAllInvoicesResponse();
-        findAllInvoicesResponse.getInvoices();
-        assertThrows(NullPointerException.class, () -> {
-            invoicesEndpoint.findInvoiceById(findInvoiceByIdRequest);
-        });
     }
 
     private pl.coderstrust.accounting.model.Invoice prepareInvoice() {
