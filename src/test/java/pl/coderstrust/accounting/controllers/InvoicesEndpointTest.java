@@ -50,7 +50,6 @@ public class InvoicesEndpointTest {
 
     @Test
     public void shouldSaveInvoiceFromInvoiceBook() throws IOException, DatatypeConfigurationException {
-
         // given
         SaveInvoiceRequest saveInvoiceRequest = new SaveInvoiceRequest();
         pl.coderstrust.accounting.model.Invoice invoiceModel = prepareInvoice();
