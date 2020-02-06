@@ -90,7 +90,7 @@ public class InvoicePdf {
                 
 
 
-                cell = new PdfPCell(new Phrase();
+                cell = new PdfPCell(new Phrase());
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 cell.setPaddingRight(5);
