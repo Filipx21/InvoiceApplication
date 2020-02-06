@@ -1,9 +1,13 @@
 package pl.coderstrust.accounting.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+
+@Table(name = "invoices")
 public class Invoice {
 
     private Long id;
