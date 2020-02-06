@@ -87,7 +87,7 @@ public class InvoicePdf {
                 cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 cell.setPaddingRight(5);
                 table.addCell(cell);
-                
+
 
 
                 cell = new PdfPCell(new Phrase();
