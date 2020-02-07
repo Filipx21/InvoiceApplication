@@ -12,8 +12,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.coderstrust.accounting.model.Invoice;
-import pl.coderstrust.accounting.model.InvoiceEntry;
-import pl.coderstrust.accounting.services.InvoiceBook;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +21,7 @@ public class InvoicePdf {
 
     private static final Logger logger = LoggerFactory.getLogger(InvoicePdf.class);
 
-    public static ByteArrayInputStream invoicesReport(List<Invoice> invoices) {
+    public static ByteArrayInputStream invoicesReport(Invoice invoice) {
 
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -60,48 +58,44 @@ public class InvoicePdf {
             hcell = new PdfPCell(new Phrase("VAT/podatek VAT", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
+            
+            PdfPCell cell;
 
-            for (Invoice invoice : invoices) {
+            cell = new PdfPCell(new Phrase(invoice.getId().toString()));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
 
-                PdfPCell cell;
+            cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
+            cell.setPaddingLeft(5);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(invoice.getId().toString()));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
+            cell = new PdfPCell(new Phrase(invoice.getSeller().toString()));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPaddingRight(5);
+            table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
-                cell.setPaddingLeft(5);
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                table.addCell(cell);
+            cell = new PdfPCell(new Phrase(invoice.getBuyer().toString()));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPaddingRight(5);
+            table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(invoice.getSeller().toString()));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(invoice.getBuyer().toString()));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
-                
+            cell = new PdfPCell(new Phrase());
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPaddingRight(5);
+            table.addCell(cell);
 
 
-                cell = new PdfPCell(new Phrase());
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
+            PdfWriter.getInstance(document, out);
+            document.open();
+            document.add(table);
 
-            }
-                PdfWriter.getInstance(document, out);
-                document.open();
-                document.add(table);
-
-                document.close();
+            document.close();
 
 
         } catch (DocumentException ex) {
