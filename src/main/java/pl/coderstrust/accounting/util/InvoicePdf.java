@@ -12,9 +12,12 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.coderstrust.accounting.model.Invoice;
+import pl.coderstrust.accounting.model.InvoiceEntry;
+import pl.coderstrust.accounting.model.Vat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class InvoicePdf {
@@ -29,8 +32,8 @@ public class InvoicePdf {
         try {
 
             PdfPTable table = new PdfPTable(6);
-            table.setWidthPercentage(80);
-            table.setWidths(new int[] {1, 3, 6, 6, 3, 3});
+            table.setWidthPercentage(90);
+            table.setWidths(new int[] {2, 3, 6, 6, 3, 3});
 
             Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 
@@ -43,23 +46,72 @@ public class InvoicePdf {
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Seller/sprzedawca", headFont));
+            hcell = new PdfPCell(new Phrase("Opis/description", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Buyer/odbiorca", headFont));
+            hcell = new PdfPCell(new Phrase("Vat/Vat rate", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Price/cena", headFont));
+            hcell = new PdfPCell(new Phrase("VAT/Vat value", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("VAT/podatek VAT", headFont));
+            hcell = new PdfPCell(new Phrase("opis", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
-            
-            PdfPCell cell;
+
+            List<InvoiceEntry> entries = invoice.getEntries();
+            String description = null;
+            BigDecimal price = null;
+            Vat vatRate = null;
+            int vatValue = 0;
+
+            for (InvoiceEntry entriess : entries){
+                description = entriess.getDescription();
+                price = entriess.getPrice();
+                vatRate = entriess.getVatRate();
+                vatValue = entriess.getVatValue();
+            }
+
+                PdfPCell cell;
+                cell = new PdfPCell(new Phrase(invoice.getId().toString()));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
+                cell.setPaddingLeft(5);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(description));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cell.setPaddingRight(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(price.toString());
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cell.setPaddingRight(5);
+                table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(vatValue));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPaddingRight(5);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(invoice.getId().toString()));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPaddingRight(5);
+            table.addCell(cell);
+
+
 
             cell = new PdfPCell(new Phrase(invoice.getId().toString()));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -79,12 +131,6 @@ public class InvoicePdf {
             table.addCell(cell);
 
             cell = new PdfPCell(new Phrase(invoice.getBuyer().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPaddingRight(5);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase());
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             cell.setPaddingRight(5);
