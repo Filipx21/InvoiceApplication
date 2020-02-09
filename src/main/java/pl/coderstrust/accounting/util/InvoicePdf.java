@@ -91,6 +91,7 @@ public class InvoicePdf {
             PdfPTable titleTable = new PdfPTable(1);
             titleTable.setWidthPercentage(100);
             titleTable.setWidths(new int[] {10});
+            titleTable.getSpacingAfter();
 
             PdfPCell titleCell;
             titleCell = new PdfPCell(new Phrase("Invoice No " + invoice.getId().toString(), headFont));
