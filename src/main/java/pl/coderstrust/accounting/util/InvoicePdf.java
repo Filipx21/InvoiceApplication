@@ -6,11 +6,13 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.coderstrust.accounting.model.Company;
 import pl.coderstrust.accounting.model.Invoice;
 import pl.coderstrust.accounting.model.InvoiceEntry;
 import pl.coderstrust.accounting.model.Vat;
@@ -30,115 +32,153 @@ public class InvoicePdf {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {
+            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            headFont.setSize(14);
+
+            PdfPTable headTable = new PdfPTable(3);
+            headTable.setWidthPercentage(100);
+            headTable.setWidths(new int[] {6, 6, 3});
+
+            PdfPCell headHcell;
+            headHcell = new PdfPCell(new Phrase("Seller", headFont));
+            headHcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headHcell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headHcell);
+
+            headHcell = new PdfPCell(new Phrase("Buyer", headFont));
+            headHcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headHcell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headHcell);
+
+            headHcell = new PdfPCell(new Phrase("Date", headFont));
+            headHcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headHcell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headHcell);
+
+            Company seller = invoice.getSeller();
+            Company buyer = invoice.getSeller();
+
+            PdfPCell headCell;
+            String sellerCell = seller.getName() + "\r\n" + seller.getAddress() + "\r\n" + seller.getTin();
+            headCell = new PdfPCell(new Phrase(sellerCell));
+            headCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            headCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headCell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headCell);
+
+            String buyerCell = buyer.getName() + "\r\n" + buyer.getAddress() + "\r\n" + buyer.getTin();
+            headCell = new PdfPCell(new Phrase(buyerCell));
+            headCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            headCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headCell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headCell);
+
+            headCell = new PdfPCell(new Phrase(invoice.getDate().toString()));
+            headCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            headCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headCell.setBorder(Rectangle.NO_BORDER);
+            headTable.addCell(headCell);
+
+            PdfPTable spaceTable = new PdfPTable(1);
+            spaceTable.setWidthPercentage(100);
+            spaceTable.setWidths(new int[] {10});
+
+            PdfPCell spaceCell;
+            spaceCell = new PdfPCell(new Phrase(""));
+            spaceCell.setBorder(Rectangle.NO_BORDER);
+            spaceTable.addCell(spaceCell);
+
+            PdfPTable titleTable = new PdfPTable(1);
+            titleTable.setWidthPercentage(100);
+            titleTable.setWidths(new int[] {10});
+
+            PdfPCell titleCell;
+            titleCell = new PdfPCell(new Phrase("Invoice No " + invoice.getId().toString(), headFont));
+            titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleCell.setBorder(Rectangle.NO_BORDER);
+            titleTable.addCell(titleCell);
 
             PdfPTable table = new PdfPTable(6);
-            table.setWidthPercentage(90);
-            table.setWidths(new int[] {2, 3, 6, 6, 3, 3});
-
-            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[] {2, 4, 7, 4, 3, 3});
 
             PdfPCell hcell;
             hcell = new PdfPCell(new Phrase("Id", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Date/data", headFont));
+            hcell = new PdfPCell(new Phrase("Date", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Opis/description", headFont));
+            hcell = new PdfPCell(new Phrase("Description", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("Vat/Vat rate", headFont));
+            hcell = new PdfPCell(new Phrase("Vat rate", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("VAT/Vat value", headFont));
+            hcell = new PdfPCell(new Phrase("Vat value", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            hcell = new PdfPCell(new Phrase("opis", headFont));
+            hcell = new PdfPCell(new Phrase("Price", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
             List<InvoiceEntry> entries = invoice.getEntries();
-            String description = null;
-            BigDecimal price = null;
-            Vat vatRate = null;
+            String description = "opis";
+            BigDecimal price = BigDecimal.valueOf(0);
+            Vat vatRate = Vat.STANDARD_23;
             int vatValue = 0;
 
-            for (InvoiceEntry entriess : entries){
-                description = entriess.getDescription();
-                price = entriess.getPrice();
-                vatRate = entriess.getVatRate();
-                vatValue = entriess.getVatValue();
-            }
+//            for (InvoiceEntry entriess : entries) {
+//                description = entriess.getDescription();
+//                price = entriess.getPrice();
+//                vatRate = entriess.getVatRate();
+//                vatValue = entriess.getVatValue();
+//            }
 
-                PdfPCell cell;
-                cell = new PdfPCell(new Phrase(invoice.getId().toString()));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
-                cell.setPaddingLeft(5);
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(description));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(price.toString());
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(vatValue));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPaddingRight(5);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(invoice.getId().toString()));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPaddingRight(5);
-            table.addCell(cell);
-
-
-
+            PdfPCell cell;
             cell = new PdfPCell(new Phrase(invoice.getId().toString()));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
             cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
-            cell.setPaddingLeft(5);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(invoice.getSeller().toString()));
+            cell = new PdfPCell(new Phrase(description));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPaddingRight(5);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(invoice.getBuyer().toString()));
+            cell = new PdfPCell(new Phrase(vatRate.toString()));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPaddingRight(5);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(String.valueOf(vatValue)));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(price.toString()));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
 
             PdfWriter.getInstance(document, out);
             document.open();
+            document.add(headTable);
+            document.add(spaceTable);
+            document.add(titleTable);
+            document.add(spaceTable);
             document.add(table);
 
             document.close();
