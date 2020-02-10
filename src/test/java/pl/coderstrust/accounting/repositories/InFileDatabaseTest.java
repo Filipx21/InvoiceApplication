@@ -16,9 +16,6 @@ import java.io.File;
 import java.io.IOException;
 
 @ActiveProfiles("file")
-//@ContextConfiguration(locations = "classpath:application-in-file.properties")
-//@ExtendWith(MockitoExtension.class)
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 class InFileDatabaseTest extends DatabaseTests {
 
     @Autowired
