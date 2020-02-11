@@ -90,17 +90,10 @@ public class InvoicePdf {
         table.addCell(hcell);
 
         List<InvoiceEntry> entries = invoice.getEntries();
-        String description = "opis";
-        BigDecimal price = BigDecimal.valueOf(0);
-        Vat vatRate = Vat.STANDARD_23;
-        int vatValue = 0;
-
-//        for (InvoiceEntry entriess : entries) {
-//            description = entriess.getDescription();
-//            price = entriess.getPrice();
-//            vatRate = entriess.getVatRate();
-//            vatValue = entriess.getVatValue();
-//        }
+        String description = entries.get(0).getDescription();
+        BigDecimal price = entries.get(0).getPrice();
+        Vat vatRate = entries.get(0).getVatRate();
+        int vatValue = entries.get(0).getVatValue();
 
         PdfPCell cell;
         cell = new PdfPCell(new Phrase(invoice.getId().toString()));
