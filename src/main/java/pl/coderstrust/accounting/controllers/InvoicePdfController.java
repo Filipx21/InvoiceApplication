@@ -2,7 +2,6 @@ package pl.coderstrust.accounting.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Controller
-public class MyController {
+public class InvoicePdfController {
 
     @Autowired
     private InvoiceBook invoiceBook;

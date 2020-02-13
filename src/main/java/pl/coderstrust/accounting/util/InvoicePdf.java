@@ -40,13 +40,9 @@ public class InvoicePdf {
             PdfPTable titleTable = titleTable(invoice, headFont);
             PdfPTable table = bodyTable(invoice, headFont);
 
-            Paragraph paragraph = new Paragraph();
-            paragraph.setSpacingBefore(5);
-
             PdfWriter.getInstance(document, out);
             document.open();
             document.add(headTable);
-            document.add(paragraph);
             document.add(titleTable);
             document.add(table);
 
@@ -60,16 +56,13 @@ public class InvoicePdf {
     }
 
     public static PdfPTable bodyTable(Invoice invoice, Font headFont) throws DocumentException {
+        logger.info("Create body table of Invoice");
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
-        table.setWidths(new int[] {2, 4, 7, 4, 3, 3});
+        table.setWidths(new int[] {2, 7, 3, 3, 3, 3});
 
         PdfPCell hcell;
         hcell = new PdfPCell(new Phrase("Id", headFont));
-        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(hcell);
-
-        hcell = new PdfPCell(new Phrase("Date", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell);
 
@@ -81,11 +74,15 @@ public class InvoicePdf {
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell);
 
+        hcell = new PdfPCell(new Phrase("Net price", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
         hcell = new PdfPCell(new Phrase("Vat value", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("Price", headFont));
+        hcell = new PdfPCell(new Phrase("Price inc. VAT", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell);
 
@@ -94,14 +91,11 @@ public class InvoicePdf {
         BigDecimal price = entries.get(0).getPrice();
         Vat vatRate = entries.get(0).getVatRate();
         int vatValue = entries.get(0).getVatValue();
+        BigDecimal vatValueBig = BigDecimal.valueOf(vatValue);
+        BigDecimal netValue = price.subtract(vatValueBig);
 
         PdfPCell cell;
         cell = new PdfPCell(new Phrase(invoice.getId().toString()));
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(invoice.getDate().toString()));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -112,6 +106,11 @@ public class InvoicePdf {
         table.addCell(cell);
 
         cell = new PdfPCell(new Phrase(vatRate.toString()));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(String.valueOf(netValue)));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);
@@ -129,6 +128,7 @@ public class InvoicePdf {
     }
 
     public static PdfPTable titleTable(Invoice invoice, Font headFont) throws DocumentException {
+        logger.info("Create title table of Invoice");
         PdfPTable titleTable = new PdfPTable(1);
         titleTable.setWidthPercentage(100);
         titleTable.setWidths(new int[] {10});
@@ -144,6 +144,7 @@ public class InvoicePdf {
     }
 
     public static PdfPTable headTable(Invoice invoice, Font headFont) throws DocumentException {
+        logger.info("Create head table of Invoice");
         PdfPTable headTable = new PdfPTable(3);
         headTable.setWidthPercentage(100);
         headTable.setWidths(new int[] {6, 6, 3});
