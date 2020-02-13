@@ -34,6 +34,8 @@ public class InvoicePdf {
 
         Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         headFont.setSize(14);
+        Paragraph paragraph = new Paragraph(" ");
+        paragraph.setSpacingAfter(50);
 
         try {
             PdfPTable headTable = headTable(invoice, headFont);
@@ -43,9 +45,10 @@ public class InvoicePdf {
             PdfWriter.getInstance(document, out);
             document.open();
             document.add(headTable);
+            document.add(paragraph);
             document.add(titleTable);
+            document.add(paragraph);
             document.add(table);
-
             document.close();
 
         } catch (DocumentException ex) {
