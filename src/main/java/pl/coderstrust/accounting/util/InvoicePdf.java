@@ -169,7 +169,7 @@ public class InvoicePdf {
         headTable.addCell(headHcell);
 
         Company seller = invoice.getSeller();
-        Company buyer = invoice.getSeller();
+        Company buyer = invoice.getBuyer();
 
         PdfPCell headCell;
         String sellerCell = seller.getName() + "\r\n" + seller.getAddress() + "\r\n" + seller.getTin();
