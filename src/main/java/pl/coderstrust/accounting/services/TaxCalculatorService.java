@@ -8,17 +8,18 @@ import java.math.BigDecimal;
 @Service
 public class TaxCalculatorService {
 
-    BigDecimal calculateVatValue(InvoiceEntry invoiceEntry) {
+    InvoiceEntry invoiceEntry;
+
+    BigDecimal calculateVatValue() {
         int vatValue = invoiceEntry.getVatValue();
         BigDecimal vatInvoiceValue = null;
         BigDecimal vatBigDecimal = multiply(vatValue, vatInvoiceValue);
         BigDecimal priceGross = invoiceEntry.getPrice();
-        BigDecimal vatCalculated = vatBigDecimal.multiply(priceGross).multiply(BigDecimal.valueOf(0.01));
-        return vatCalculated;
+        return vatBigDecimal.multiply(priceGross).multiply(BigDecimal.valueOf(0.01));
     }
 
-    BigDecimal calculateNetPrice(InvoiceEntry invoiceEntry) {
-        return null;
+    BigDecimal calculateNetPrice() {
+        return invoiceEntry.getPrice().subtract(calculateVatValue());
     }
 
     private static BigDecimal multiply ( int a, BigDecimal b ) {
