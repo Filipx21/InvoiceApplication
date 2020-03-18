@@ -16,6 +16,6 @@ public class TaxCalculatorController {
         this.taxService = taxService;
     }
 
-    @GetMapping("/invoices")
+   // @GetMapping("/invoices")
 
 }
